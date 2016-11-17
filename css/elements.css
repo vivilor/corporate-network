@@ -1,0 +1,13 @@
+.btn-default {
+    background-color: #101010;
+    border: none;
+    color: #dfdfdf;
+    padding: 12px 12px;
+    text-decoration: none;
+    transition: linear 0.2s;
+}
+
+.btn-default:hover {
+    background-color: #DFDFDF;
+    color: #101010;
+}

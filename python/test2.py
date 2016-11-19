@@ -1,5 +1,7 @@
 test = 'a'
-print(test)
 
-for i in range(128):
-    print(str(i) + '\t' + chr(i))
+it = []
+ir = ('a', 'b')
+print(type(ir))
+it.append(tuple(i for i in range(10)))
+print(it)

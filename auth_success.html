@@ -1,15 +1,20 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Вход выполнен.</title>
-    <link href="css/fonts.css'
+    <link href="css/common.css" type="text/css" rel="stylesheet">
+    <link href="css/elements.css" type="text/css" rel="stylesheet">
+    <link href="css/fonts.css" type="text/css" rel="stylesheet">
+    <script src="js/redirect.js"></script>
 </head>
-<body>
-    <div class="center russia h32pt">
-        Вход выполнен успешно
-        <br>
-        Добро пожаловать!
+<body class="bkg-default" onload="show_countdown()">
+    <div id="auth-msg" class="txt-default center russia h14pt">
+        <div class="inline">Авторизация прошла успешно</div>
+        <br><br>
+        <div class="inline">Перенаправление в панель управления через</div>
+        <div class="inline" id="clock"></div>
+        <div class="inline">сек.</div>
     </div>
 </body>
 </html>

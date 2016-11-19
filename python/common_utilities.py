@@ -8,6 +8,7 @@ def as_str(num):
     else:
         return str(num)
 
+
 def check_random(percent):
     seed()
     limit = 10000

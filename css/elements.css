@@ -1,13 +1,78 @@
 .btn-default {
-    background-color: #101010;
-    border: none;
     color: #dfdfdf;
-    padding: 12px 12px;
+    border: none;
+    padding: 12px;
+    z-index: 11;
     text-decoration: none;
-    transition: linear 0.2s;
+    background-color: #101010;
 }
 
-.btn-default:hover {
-    background-color: #DFDFDF;
-    color: #101010;
+.btn-default a,
+.btn-default a div,
+.btn-default a span {
+    z-index: 12;
+    position: relative;
 }
+
+.btn-icon {
+    width: 40px;
+    height: 40px;
+    background: scroll #101010 center no-repeat;
+    background-size: cover;
+    text-decoration: none;
+}
+
+.btn-default,
+.btn-default a,
+.btn-default a div,
+.btn-default a span {
+    transition: linear 0.2s; }
+
+.btn-default a span {
+    display: none;
+}
+
+.btn-default:hover,
+.btn-default:hover a,
+.btn-default:hover a div {
+    display: inline-block;
+    color: #dfdfdf;
+    filter: invert(1);
+
+}
+
+.btn-default:hover a span {
+    display: inline-block;
+    filter: invert(1);
+}
+
+.btn-default:hover .btn-container .btn-icon {
+    background-color: #DFDFDF;
+
+}
+body {
+    background-color: #101010;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.txt-default {
+    color: #dfdfdf;
+}
+
+.logo {
+    background-image: url(../img/logo.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: scroll;
+    background-size: contain;
+    vertical-align: middle;
+    width: 18%;
+    height: 74px;
+}
+
+.btn-container {
+}
+

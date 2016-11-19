@@ -5,6 +5,31 @@ import mysql.connector
 import common_utilities as utils
 from random import seed, randint
 
+
+'''
+    Table: Clients
+
+    +-----+----------------+-----------+--------+-------------------------------+--------------------------------+
+    |INDEX|      TYPE      |GENERATING?|  TYPE  |           (100 - N)%          |                N%              |
+    |-----+----------------+-----------+--------+-------------------------------+--------------------------------|
+    |  -  | ID             |     -     |   --   |               --              |                --              |
+    |     |                |           |        |                               |                                |
+    |  0  | Name           |     +     | String |               --              |                --              |
+    |  1  | Birthday       |     +     | Date   |               --              |                --              |
+    |  2  | Passport       |     +     | Int    |               --              |                --              |
+    |  3  | ServicingStart |     +     | Date   |               --              |                --              |
+    |     |                |           |        |                               |                                |
+    |  4  | Funds          |     +     | Float  |        [0, max_amount]        |         [0, max_amount]        |
+    |  5  | FundsSetDate   |     +     | Date   | [cur_date - 30days, cur_date] | [cl_serv_start_date, cur_date]*|
+    |     |                |           |        |                               |                                |
+    |  6  | Status         |     +     | Int    |               1               |                0               |
+    |  7  | StatusSetDate  |     +     | Date   |      cl_serv_start_date       | [cl_serv_start_date, cur_date]*|
+    +-----+----------------+-----------+--------+-------------------------------+--------------------------------+
+
+    Note: cells of rows marked by '*' will have the same values
+'''
+
+
 from datetime import datetime, date
 
 tables = \
@@ -13,7 +38,8 @@ tables = \
         'ID',
         'Name',
         'Birthday',
-        'Passport',
+        'PassportSerial',
+        'PassportNumber',
         'ServicingStart',
         'Funds',
         'FundsSetDate',
@@ -83,6 +109,23 @@ class dateStorage:
                utils.as_str(self.dsMonth) + '-' + \
                utils.as_str(self.dsDay)
 
+    def add_year(self):
+        self.dsYear += 1
+
+    def add_month(self):
+        if self.dsMonth == 12:
+            self.dsMonth = 1
+            self.add_year()
+        else:
+            self.dsMonth += 1
+
+    def add_day(self):
+        if self.dsDay == utils.days_of(self.dsMonth, self.dsYear):
+            self.dsDay = 1
+            self.add_month()
+        else:
+            self.dsDay += 1
+
 
     def isEarlierThan(self, date_to_check):
         if (self.dsYear < date_to_check.dsYear):
@@ -118,39 +161,134 @@ class dateStorage:
         print(self.SQLformat())
 
 
+def to_int(str):
+    n = 0
+    power = 0
+    for i in range(len(str)-1, -1, -1):
+        n += int(str[i]) * 10 ** power
+        power += 1
+    return n
+
+
+def to_dS(date_str):
+    return dateStorage(to_int(date_str[8:10]),
+                       to_int(date_str[5:7]),
+                       to_int(date_str[0:4]))
+
+
 def get_cur_date():
     sys_date = datetime.now()
     return dateStorage(sys_date.day, sys_date.month, sys_date.year)
 
 
+def compare_date(dateA, dateB):
+    if dateA.dsYear > dateB.dsYear:
+        return 1
+    elif dateA.dsYear < dateB.dsYear:
+        return -1
+    else:
+        if dateA.dsMonth > dateB.dsMonth:
+            return 1
+        if dateA.dsMonth < dateB.dsMonth:
+            return -1
+        else:
+            if dateA.dsDay > dateB.dsDay:
+                return 1
+            if dateA.dsDay < dateB.dsDay:
+                return -1
+            else:
+                return 0
+
+
+def oldest_date_index(dates):
+    oldest = dates[0]
+    index = 0
+    for i in range(len(dates)):
+        date = dates[i]
+        if compare_date(oldest, date) > 0:
+            index = i
+            oldest = date
+    return index
+
+
+def gen_date(start, stop):
+    seed()
+    if not compare_date(start, stop):
+        return start
+    if start.dsYear == stop.dsYear:
+        new_year = start.dsYear
+        if start.dsMonth == stop.dsMonth:
+            new_month = start.dsMonth
+            new_day = randint(start.dsDay, stop.dsDay)
+        else:
+            new_month = randint(start.dsMonth, stop.dsMonth)
+            if new_month == start.dsMonth:
+                new_day = randint(start.dsDay,
+                                   utils.days_of(start.dsMonth,
+                                                 start.dsYear))
+            elif new_month == stop.dsMonth:
+                new_day = randint(1,
+                                   stop.dsDay)
+            else:
+                new_day = randint(1,
+                                   utils.days_of(new_month,
+                                                 new_year))
+    else:
+        new_year = randint(start.dsYear, stop.dsYear)
+        if new_year == start.dsYear:
+            new_month = randint(start.dsMonth, 12)
+            if new_month == start.dsMonth:
+                new_day = randint(start.dsDay,
+                                  utils.days_of(new_month,
+                                                new_year))
+            else:
+                new_day = randint(1,
+                                  utils.days_of(new_month,
+                                                new_year))
+        elif new_year == stop.dsYear:
+            new_month = randint(1, stop.dsMonth)
+            if new_month == stop.dsMonth:
+                new_day = randint(1,
+                                  stop.dsDay)
+            else:
+                new_day = randint(1,
+                                  utils.days_of(new_month,
+                                                new_year))
+        else:
+            new_month = randint(1, 12)
+            new_day = randint(1,
+                              utils.days_of(new_month,
+                                            new_year))
+
+    return dateStorage(new_day, new_month, new_year)
+
+
 def gen_dates(date_start, date_stop, quantity):
-    result = []
+    return list(gen_date(date_start, date_stop) for i in range(quantity))
 
-    for i in range(quantity):
-        seed()
-
-        gen_year = randint(date_start.dsYear, date_stop.dsYear)
-
-        if gen_year == date_start.dsYear:
-            gen_month = randint(date_start.dsMonth, 12)
-        elif gen_year == date_stop.dsYear:
-            gen_month = randint(1, date_stop.dsMonth)
+def gen_sorted_dates(date_start, date_stop, quantity):
+    storage = []
+    i = 0
+    while i < quantity:
+        new_date = gen_date(date_start, date_stop)
+        if not len(storage):
+            storage.append(new_date)
+        elif len(storage) == 1:
+            if compare_date(new_date, storage[0]) == 1:
+                storage.append(new_date)
+            else:
+                storage.insert(0, new_date)
         else:
-            gen_month = randint(1, 12)
-
-        if gen_month == date_start.dsMonth:
-            gen_day = randint(date_start.dsDay,
-                              utils.days_of(date_start.dsMonth,
-                                            date_start.dsYear))
-        elif gen_month == date_stop.dsMonth:
-            gen_day = randint(1, date_stop.dsDay)
-        else:
-            gen_day = randint(1, utils.days_of(gen_month, gen_year))
-
-        result.append(dateStorage(gen_day, gen_month, gen_year))
-
-    return result
-
+            for j in range(len(storage)):
+                if compare_date(new_date, storage[j]) < 1:
+                    storage.insert(j, new_date)
+                    break
+                else:
+                    if j == len(storage)-1:
+                        storage.append(new_date)
+                        break
+        i += 1
+    return storage
 
 def gen_names(quantity, female_ratio):
 
@@ -172,121 +310,102 @@ def gen_names(quantity, female_ratio):
     return names_storage
 
 
-def gen_passports(quantity):
+def gen_passports_serial(quantity):
     seed()
-    return list([randint(1171986301, 9829187581) for i in range(quantity)])
+    return list([randint(1001, 9817) for i in range(quantity)])
 
 
-def query_ADD_FUNDS_TO_CLIENTS(mysql_instance, amount):
-    cursor_handler = mysql_instance.cursor()
-
-    cur_table = 'client'
-    cur_column = cur_table + tables[cur_table][5]
-
-    query = 'UPDATE ' + cur_table + \
-              ' SET ' + cur_column + ' = ' + cur_column + ' + %s'
-    args = (amount,)
-    try:
-        cursor_handler.execute(query, args)
-        mysql_instance.commit()
-    finally:
-        cursor_handler.close()
+def gen_passports_number(quantity):
+    seed()
+    return list([randint(100001, 989189) for i in range(quantity)])
 
 
-'''
-    Table: Clients
-
-    +-----+----------------+-----------+--------+-------------------------------+--------------------------------+
-    |INDEX|      TYPE      |GENERATING?|  TYPE  |           (100 - N)%          |                N%              |
-    |-----+----------------+-----------+--------+-------------------------------+--------------------------------|
-    |  -  | ID             |     -     |   --   |               --              |                --              |
-    |     |                |           |        |                               |                                |
-    |  0  | Name           |     +     | String |               --              |                --              |
-    |  1  | Birthday       |     +     | Date   |               --              |                --              |
-    |  2  | Passport       |     +     | Int    |               --              |                --              |
-    |  3  | ServicingStart |     +     | Date   |               --              |                --              |
-    |     |                |           |        |                               |                                |
-    |  4  | Funds          |     +     | Float  |        [0, max_amount]        |         [0, max_amount]        |
-    |  5  | FundsSetDate   |     +     | Date   | [cur_date - 30days, cur_date] | [cl_serv_start_date, cur_date]*|
-    |     |                |           |        |                               |                                |
-    |  6  | Status         |     +     | Int    |               1               |                0               |
-    |  7  | StatusSetDate  |     +     | Date   |      cl_serv_start_date       | [cl_serv_start_date, cur_date]*|
-    +-----+----------------+-----------+--------+-------------------------------+--------------------------------+
-
-    Note: cells of rows marked by '*' will have the same values
-'''
-def gen_clients_data(quantity,
-                     birth_date_start,
-                     birth_date_stop,
-                     servicing_start_date,
-                     max_money_amount,
-                     out_of_service_percent):
-
-    clients_data = { tables['client'][i]:[]
-                     for i in range(1, len(tables['client'])) }
-
+def gen_clients(quantity,
+                    serv_start,
+                    max_funds,
+                    defaulters_percent):
+    birth_start = dateStorage(1, 1, 1960)
+    birth_stop = dateStorage(31, 12, 1997)
     cur_date = get_cur_date()
+    female_percent = 40
+    storage = { tables['client'][i]:[] for i in range(1, len(tables['client'])) }
 
-    clients_data['Name'].extend(gen_names(quantity, 40))
-
-    clients_data['Birthday'].extend(gen_dates(birth_date_start,
-                                              birth_date_stop,
-                                              quantity))
-
-    clients_data['Passport'].extend(gen_passports(quantity))
-
-    clients_data['ServicingStart'].extend(gen_dates(servicing_start_date,
-                                                    cur_date,
-                                                    quantity))
+    storage['Name'].extend(gen_names(quantity, female_percent))
+    storage['Birthday'].extend(gen_dates(birth_start, birth_stop, quantity))
+    storage['PassportSerial'].extend(gen_passports_serial(quantity))
+    storage['PassportNumber'].extend(gen_passports_number(quantity))
+    storage['ServicingStart'].extend(gen_sorted_dates(serv_start, cur_date, quantity))
 
     for i in range(quantity):
         seed()
-        current_funds = randint(0, max_money_amount - 1) + 0.00
-        clients_data['Funds'].append(current_funds)
 
-        if(utils.check_random(out_of_service_percent)):
-            clients_data['Status'].append(0)
+        mode = utils.check_random(defaulters_percent)
+        current_funds = randint(0, max_funds - 1) + 0.00
+        service_start = storage['ServicingStart'][i]
 
-            funds_set_date = gen_dates(cur_date.month_back(),
-                                       cur_date,
-                                       1)
+        storage['Funds'].append(current_funds)
+        storage['Status'].append(0 if mode else 1)
+
+        if compare_date(service_start, cur_date.month_back()) < 1:
+            funds_set_start = cur_date.month_back()
+        else:
+            funds_set_start = service_start
+
+        funds_set_date = gen_dates(funds_set_start, cur_date, 1)
+
+        if(mode):
             status_set_date = funds_set_date
         else:
-            clients_data['Status'].append(1)
+            status_set_date = gen_dates(service_start, cur_date, 1)
 
-            funds_set_date = gen_dates(cur_date.month_back(),
-                                       cur_date,
-                                       1)
-            status_set_date = gen_dates(clients_data['ServicingStart'][i],
-                                        cur_date,
-                                        1)
+        storage['FundsSetDate'].append(funds_set_date[0].SQLformat())
+        storage['StatusSetDate'].append(status_set_date[0].SQLformat())
+        storage['Birthday'][i] = storage['Birthday'][i].SQLformat()
+        storage['ServicingStart'][i] = service_start.SQLformat()
+    print('Successfully generated ' + str(quantity) + ' clients.')
+    return storage
 
-        clients_data['FundsSetDate'].extend(funds_set_date)
-        clients_data['StatusSetDate'].extend(status_set_date)
 
-    '''
-    for i in range(quantity):
+def swap(data, i, j):
+    tmp = data[i]
+    data[i] = data[j]
+    data[j] = tmp
+
+
+def sort_dates(raw_data):
+    while True:
+        counter = 0
+        swapped = False
+        for i in range(len(raw_data)-1):
+            result = compare_date(raw_data[i], raw_data[i+1])
+            if result == 1:
+                swap(raw_data, i, i+1)
+                swapped = True
+                counter += 1
+            else:
+                continue
+        print('Swapped: ' + str(counter))
+        if not swapped:
+            return
+    return raw_data
+
+
+def print_clients(clients):
+    f = codecs.open("table.txt", "w", "utf-8")
+
+    for i in range(global_rows['client']):
         info = ''
-        info += clients_data['Name'][i]
-        infolen = len(info)
-        for j in range(10 - int(infolen / 4)):
-            info += '\t'
-        info += clients_data['Birthday'][i].SQLformat()
-        info += '\t'
-        info += str(clients_data['Passport'][i])
-        info += '\t'
-        info += clients_data['ServicingStart'][i].SQLformat()
-        info += '\t'
-        info += str(clients_data['Funds'][i])
-        info += '\t'
-        info += clients_data['FundsSetDate'][i].SQLformat()
-        info += '\t'
-        info += str(clients_data['Status'][i])
-        info += '\t'
-        info += clients_data['StatusSetDate'][i].SQLformat()
+        width = 30
+        for key in tables['client']:
+            if key == 'ID': continue
+            info += str(clients[key][i])
+            for j in range(width - len(info)):
+                info += ' '
+            width += 12
         print(info)
-    '''
-    return clients_data
+        info += '\n'
+        f.write(info)
+
 
 def gen_service_data():
     services_data = { tables['service'][i]:[]
@@ -304,7 +423,7 @@ def gen_service_data():
     for i in range(5):
         services_data['Title'].append('UNLIMIT ' + types[i])
         services_data['Cost'].append(199 + 50 * i)
-
+    '''
     for i in range(5+3+5):
         info = ''
         info += services_data['Title'][i]
@@ -313,7 +432,8 @@ def gen_service_data():
             info += '\t'
         info += str(services_data['Cost'][i])
         print(info)
-
+    '''
+    print('Successfully generated ' + str(5+3+5) + ' services.')
     return services_data
 
 
@@ -340,7 +460,7 @@ def gen_equip_data():
 
     equip_data['Desc'].append('Патчкорд / RJ-45 / 1m')
     equip_data['Cost'].append(20)
-
+    '''
     for i in range(len(manufacturers) * 2 + 1):
         info = ''
         info += equip_data['Desc'][i]
@@ -349,7 +469,8 @@ def gen_equip_data():
             info += '\t'
         info += str(equip_data['Cost'][i])
         print(info)
-
+    '''
+    print('Successfully generated ' + str(len(equip_data)) + ' equipment units.')
     return equip_data
 
 
@@ -365,7 +486,7 @@ def gen_technitian_data(quantity,
         else:
             salary += (salary_full / 2)
         technitian_data['Salary'].append(salary)
-
+    '''
     for i in range(quantity):
         info = ''
         info += technitian_data['Name'][i]
@@ -374,25 +495,21 @@ def gen_technitian_data(quantity,
             info += '\t'
         info += str(technitian_data['Salary'][i])
         print(info)
-
+    '''
+    print('Successfully generated ' + str(quantity) + ' technitians.')
     return technitian_data
 
-def gen_orders_and_relations(quantity,
-                             clients,
-                             services,
-                             equip,
-                             technitians):
+def gen_orders(clients,
+               services,
+               equip,
+               technitians):
     services_set = len(services['Cost'])-1
     equip_set = len(equip['Cost'])-1
     technitians_set = len(technitians['Salary'])-1
 
     orders_data = {tables['order'][i]: []
                      for i in range(1, len(tables['order']))}
-    csr_data = {tables['client_service_relation'][i]: []
-                     for i in range(1, len(tables['client_service_relation']))}
-    cer_data = {tables['client_equip_relation'][i]: []
-                     for i in range(1, len(tables['client_equip_relation']))}
-
+    quantity = len(clients['Name'])
     for i in range(quantity):
         seed()
 
@@ -410,11 +527,6 @@ def gen_orders_and_relations(quantity,
             orders_data['TechnitianID'].append(technitian_id+1)
             orders_data['Date'].append(clients['ServicingStart'][i])
 
-            cer_data['cerClientID'].append(i+1)
-            cer_data['cerEquipID'].append(item_id)
-            cer_data['cerOrderDate'].append(clients['ServicingStart'][i])
-
-
         item_id = randint(0, services_set)
         order_cost = services['Cost'][item_id]
 
@@ -426,54 +538,70 @@ def gen_orders_and_relations(quantity,
         orders_data['TechnitianID'].append(None)
         orders_data['Date'].append(clients['ServicingStart'][i])
 
-        csr_data['csrClientID'].append(i+1)
-        csr_data['csrServiceID'].append(item_id+1)
-        csr_data['csrOrderDate'].append(clients['ServicingStart'][i])
-        if not clients['Status'][i]:
-            csr_data['csrStopDate'].append(clients['StatusSetDate'][i])
-        else:
-            csr_data['csrStopDate'].append(None)
+    print('Successfully generated ' + str(len(orders_data)) + ' orders.')
 
-    return [orders_data, csr_data, cer_data]
+    table_info = tables['order']
+
+    f = codecs.open("orders.txt", "w", "utf-8")
+
+    for i in range(len(orders_data['Cost'])):
+        query_text = """INSERT INTO `order`("""
+        for j in range(1, len(table_info)):
+            if (orders_data[table_info[j]][i] == None) and j == 6:
+                continue
+            query_text += """order"""
+            query_text += table_info[j]
+
+
+            if j == (len(table_info) - 1):
+                query_text += """) """
+            else:
+                query_text += """, """
+
+        query_text += """ VALUES( """
+        for j in range(1, len(table_info)):
+            if (j == 7):
+                query_text += '\''
+            if (orders_data[table_info[j]][i] == None):
+                continue
+            query_text += str(orders_data[table_info[j]][i])
+            if (j == 7):
+                query_text += '\''
+            if j == (len(table_info) - 1):
+                query_text += """); """
+            else:
+                query_text += """, """
+        query_text += '\n'
+        f.write(query_text)
+    f.close()
+    return orders_data
             
+start_date = dateStorage(1, 6, 2010)
 
+'''
 a = dateStorage(1, 1, 1960)
 b = dateStorage(31, 12, 1997)
-start_date = dateStorage(1, 6, 2010)
-'''
-clients_data = gen_clients_data(global_rows['client'], a, b, start_date, 199, 5)
+
+
+dates = gen_sorted_dates(a, b, 100)
+
+#f = codecs.open("table.txt", "w", "utf-8")
+for datestamp in dates:
+    datestamp.SQLprint()
+
+print(len(dates))
+    #f.write(datestamp.SQLformat() + '\n')
+
+
+clients_data = gen_clients(global_rows['client'],
+                               start_date,
+                               199,
+                               5)
+
 technitian_data = gen_technitian_data(global_rows['technitian'], 50000)
+
 service_data = gen_service_data()
+
 equip_data = gen_equip_data()
-
-arr = gen_orders_and_relations(global_rows['client'],
-                               clients_data,
-                               service_data,
-                               equip_data,
-                               technitian_data)
-
-for i in range(len(arr[0]['Type'])):
-    info = ''
-    info += str(arr[0]['Type'][i])
-    for j in range(10 - len(info)):
-        info += ' '
-    info += str(arr[0]['ClientID'][i])
-    for j in range(20 - len(info)):
-        info += ' '
-    info += str(arr[0]['ItemID'][i])
-    for j in range(30 - len(info)):
-        info += ' '
-    info += str(arr[0]['Cost'][i])
-    for j in range(40 - len(info)):
-        info += ' '
-    info += str(arr[0]['Amount'][i])
-    for j in range(50 - len(info)):
-        info += ' '
-    if(arr[0]['TechnitianID'][i]):
-        info += str(arr[0]['TechnitianID'][i])
-    for j in range(60 - len(info)):
-        info += ' '
-    info += arr[0]['Date'][i].SQLformat()
-    info += '\t'
-    print(info)
 '''
+

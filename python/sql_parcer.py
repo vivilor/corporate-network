@@ -2,7 +2,7 @@ import sql_data_gen as gen
 import mysql.connector as sql
 
 from mysql.connector import Error
-
+from time import sleep
 
 def establish_connection(host, port, database, user, password):
     conn = None
@@ -24,14 +24,37 @@ def establish_connection(host, port, database, user, password):
         return conn
 
 
+def query_ADD_FUNDS_TO_CLIENTS(mysql_instance, amount):
+    cursor_handler = mysql_instance.cursor()
+
+    cur_table = 'client'
+    cur_column = cur_table + tables[cur_table][5]
+
+    query = 'UPDATE ' + cur_table + \
+              ' SET ' + cur_column + ' = ' + cur_column + ' + %s'
+    args = (amount,)
+    try:
+        cursor_handler.execute(query, args)
+        mysql_instance.commit()
+    finally:
+        cursor_handler.close()
+
+
+def fill_query_list(table, columns, rownum):
+    query_list = []
+    for row in range(rownum):
+        query_list.append(tuple(
+            table[column][row]
+            for column in columns
+        ))
+    return query_list
+
 def fill_clients(conn):
     table_info = gen.tables['client']
-    clients = gen.gen_clients_data(10000,
-                                   gen.a,
-                                   gen.b,
-                                   gen.start_date,
-                                   199,
-                                   5)
+    clients = gen.gen_clients(gen.global_rows['client'],
+                                  gen.start_date,
+                                  199,
+                                  5)
     query_buf = conn.cursor()
     query_text = """INSERT INTO client("""
     for i in range(1, len(table_info)):
@@ -42,31 +65,23 @@ def fill_clients(conn):
         else:
             query_text += """, """
 
-    query_text += """VALUES(%s,%s,%s,%s,%s,%s,%s,%s)"""
-    query_list = []
-    for i in range(len(clients['Name'])):
-        query_list.append((
-           clients['Name'][i],
-           clients['Birthday'][i].SQLformat(),
-           clients['Passport'][i],
-           clients['ServicingStart'][i].SQLformat(),
-           clients['Funds'][i],
-           clients['FundsSetDate'][i].SQLformat(),
-           clients['Status'][i],
-           clients['StatusSetDate'][i].SQLformat()
-        ))
-    print(query_list)
+    query_text += """VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s)"""
+
+    columns = table_info[1:]
+    query_list = fill_query_list(clients,
+                                 columns,
+                                 len(clients['Name']))
+
     query_buf.executemany(query_text, query_list)
     conn.commit()
-    print('Successfully added 10000 entries in db clients')
-
+    print('Successfully filled table `clients`')
+    return clients
 
 def fill_services(conn):
     table_info = gen.tables['service']
     services = gen.gen_service_data()
-
-
     query_buf = conn.cursor()
+
     query_text = """INSERT INTO service("""
     for i in range(1, len(table_info)):
         query_text += """service"""
@@ -77,13 +92,17 @@ def fill_services(conn):
             query_text += """, """
     query_text += """VALUES(%s,%s)"""
     query_list = []
+
+    columns = table_info[1:]
     for i in range(len(services['Title'])):
-        query_list.append((
-            services['Title'][i],
-            services['Cost'][i]
+        query_list.append(tuple(
+            services[key][i]
+            for key in columns
         ))
     query_buf.executemany(query_text, query_list)
     conn.commit()
+    print('Successfully filled table `services`')
+    return services
 
 
 def fill_equip(conn):
@@ -102,17 +121,19 @@ def fill_equip(conn):
 
     query_text += """VALUES(%s,%s)"""
     query_list = []
+    columns = table_info[1:]
     for i in range(len(equip['Desc'])):
-        query_list.append((
-            equip['Desc'][i],
-            equip['Cost'][i]
+        query_list.append(tuple(
+            equip[key][i] for key in columns
         ))
     query_buf.executemany(query_text, query_list)
     conn.commit()
+    print('Successfully filled table `equip`')
+    return equip
 
 def fill_techitians(conn):
     table_info = gen.tables['technitian']
-    technitians = gen.gen_technitian_data(50,
+    technitians = gen.gen_technitian_data(gen.global_rows['technitian'],
                                           30000)
 
     query_buf = conn.cursor()
@@ -127,28 +148,35 @@ def fill_techitians(conn):
 
     query_text += """VALUES(%s,%s)"""
     query_list = []
+
+    columns = table_info[1:]
     for i in range(len(technitians['Name'])):
-        query_list.append((
-            technitians['Name'][i],
-            technitians['Salary'][i]
+        query_list.append(tuple(
+            technitians[key][i]
+            for key in columns
         ))
-    for row in query_list:
-        print(row)
+    print(query_list)
     query_buf.executemany(query_text, query_list)
     conn.commit()
+    print('Successfully filled table `technitian`')
+    return technitians
 
 
-def fill_relations(conn):
-    order_info = gen.tables['order']
-    csr_info = gen.tables['client_service_relation']
-    cerr_info = gen.tables['client_equip_relation']
+def fill_orders(conn,
+                clients,
+                services,
+                equip,
+                technitians):
+    table_info = gen.tables['order']
+    orders = gen.gen_orders(clients,
+                            services,
+                            equip,
+                            technitians)
 
-    relations = gen.gen_(50,
-                                          30000)
-
+    print('lol')
     query_buf = conn.cursor()
-    query_text = """INSERT INTO technitian("""
-    for i in range(1, len(order_info)):
+    query_text = """INSERT INTO `order`("""
+    for i in range(1, len(table_info)):
         query_text += """order"""
         query_text += table_info[i]
         if i == (len(table_info) - 1):
@@ -156,16 +184,26 @@ def fill_relations(conn):
         else:
             query_text += """, """
 
-    query_text += """VALUES(%s,%s)"""
+    query_text += """ VALUES(%s,%s,%s,%s,%s,%s,%s)"""
     query_list = []
-    for i in range(len(technitians['Name'])):
-        query_list.append((
-            technitians['Name'][i],
-            technitians['Salary'][i]
+
+    columns = table_info[1:]
+    for i in range(len(orders['Cost'])):
+        query_list.append(tuple(
+            orders[key][i]
+            for key in columns
         ))
-    for row in query_list:
-        print(row)
-    query_buf.executemany(query_text, query_list)
+
+    print(query_list)
+    query_buf.execute(query_text, query_list)
+    conn.commit()
+
+
+def truncate_clients(conn):
+    query_buf = conn.cursor
+    query_buf.execute("TRUNCATE `order`")
+    conn.commit()
+    query_buf.execute("DELETE FROM `client` WHERE clientID < 100000")
     conn.commit()
 
 
@@ -189,10 +227,47 @@ if __name__ == '__main__':
     conn = establish_connection(host, port,
                                 database,
                                 user, password)
-    #fill_clients(conn)
-    #fill_services(conn)
-    #fill_equip(conn)
-    #fill_techitians(conn)
-    fill_
+    #truncate_clients(conn)
+    clients = fill_clients(conn)
+    services = fill_services(conn)
+    equip = fill_equip(conn)
+    technitians = fill_techitians(conn)
+    gen.gen_orders(clients,
+                   services,
+                   equip,
+                   technitians)
+    '''
+    orders = fill_orders(conn,
+                         clients,
+                         services,
+                         equip,
+                         technitians)
+    '''
 
 
+'''
+for i in range(len(orders['Type'])):
+    info = ''
+    info += str(orders['Type'][i])
+    for j in range(10 - len(info)):
+        info += ' '
+    info += str(orders['ClientID'][i])
+    for j in range(20 - len(info)):
+        info += ' '
+    info += str(orders['ItemID'][i])
+    for j in range(30 - len(info)):
+        info += ' '
+    info += str(orders['Cost'][i])
+    for j in range(40 - len(info)):
+        info += ' '
+    info += str(orders['Amount'][i])
+    for j in range(50 - len(info)):
+        info += ' '
+    if (orders['TechnitianID'][i]):
+        info += str(orders['TechnitianID'][i])
+    for j in range(60 - len(info)):
+        info += ' '
+    info += orders['Date'][i]
+    info += '\t'
+    print(info)
+'''

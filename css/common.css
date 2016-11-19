@@ -1,0 +1,38 @@
+.inline { display: inline-block }
+
+.block { display: block }
+
+.relative { position: relative }
+
+.center { text-align: center }
+.left {text-align: left }
+.v-center { vertical-align: center }
+.v-top { vertical-align: top }
+
+#start {
+    margin: 80px 41% 60px 41%;
+}
+
+#auth-msg {
+    margin: 10%
+}
+
+.nav-buttons {
+    position: absolute;
+    z-index: 10;
+    padding: 0;
+    margin: 0;
+}
+
+#clients-btn-icon   { background-image: url('/img/clients.png'); }
+#services-btn-icon  { background-image: url('/img/services.png'); }
+#equipment-btn-icon { background-image: url('/img/equip.png'); }
+#reports-btn-icon   { background-image: url('/img/report.png'); }
+#logout-btn-icon    { background-image: url('/img/logout.png'); }
+
+#cp-home {
+    position: absolute;
+    top:50px;
+    z-index: -100;
+    width: 100%;
+}

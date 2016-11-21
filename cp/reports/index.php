@@ -9,11 +9,20 @@
 </head>
 <body>
     <?php
-    $db_user = 'root';
-    $db_password = '';
-    require '../db_connect.php';
-    include '../menu.html';
-    require 'input.html';
+    if (!isset($_GET['r_year']) &&
+        !isset($_GET['r_month']))
+    {
+        $db_user = 'root';
+        $db_password = '';
+        include 'db_connect.php';
+        include 'menu.php';
+        require 'input.html';
+    }
+    else
+    {
+        require 'start.html';
+    }
+
     ?>
 
 </body>

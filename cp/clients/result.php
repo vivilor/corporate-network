@@ -9,7 +9,7 @@
 <body>
 <div style='vertical-align: top; display: inline-block'>
     <?php
-    include '../menu.html';
+    include 'menu.php';
     ?>
 </div>
 <div class='inline' style='margin-left:300px'>
@@ -25,7 +25,7 @@
         </thead>
         <tbody>
             <?php
-            require '../db_connect.php';
+            require 'db_connect.php';
             $r_month=$_GET['r_month'];
             $r_year=$_GET['r_year'];
             $query_text = "SELECT reportServiceTitle,
@@ -34,7 +34,7 @@
                            FROM report
                            WHERE reportMonth = $r_month AND
                                  reportYear = $r_year";
-            include '../safe_query.php';
+            include 'safe_query.php';
             if ($rownumb1 == 0)
             {
                 try
@@ -43,11 +43,11 @@
                 }
                 catch (PDOException $e) {
                     $output = "Ошибка при запуске процедуры" . $e->getMessage();
-                    include '../error.php';
+                    include 'error.php';
                     exit();
                 }
             }
-            include '../safe_query.php';
+            include 'safe_query.php';
             foreach ($report1 as $record):
                 ?>
                 <tr >

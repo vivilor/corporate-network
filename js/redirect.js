@@ -1,5 +1,5 @@
 function redirect() {
-    window.location = "../cp/usercp.php";
+    window.location = "../cp/start.php";
 }
 
 function set_value(obj, value) {

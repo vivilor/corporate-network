@@ -8,9 +8,10 @@
 
 /* font-face */
 @font-face { font-family: Russia; src: url(../fonts/russia.ttf); }
-@font-face { font-family: Segoe UI; src: url(../fonts/segoeui.ttf); }
+/*@font-face { font-family: Segoe UI; src: url(../fonts/segoeui.ttf); }*/
 
-.russia { font-family: Russia; font-weight: 100;}
+.russia { font-family: Russia; font-weight: 100; }
+.segoe-ui { font-family: "Segoe UI"; font-weight: 100; }
 
 /* font-weight */
 .bold       { font-weight: 900 }

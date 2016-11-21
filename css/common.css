@@ -1,5 +1,4 @@
 .inline { display: inline-block }
-
 .block { display: block }
 
 .relative { position: relative }
@@ -32,7 +31,7 @@
 
 #cp-home {
     position: absolute;
-    top:50px;
+    top:200px;
     z-index: -100;
     width: 100%;
 }

@@ -1,10 +1,9 @@
 .btn-default {
     color: #dfdfdf;
-    border: none;
     padding: 12px;
     z-index: 11;
     text-decoration: none;
-    background-color: #101010;
+    background-color: #202020;
 }
 
 .btn-default a,
@@ -15,9 +14,9 @@
 }
 
 .btn-icon {
-    width: 40px;
-    height: 40px;
-    background: scroll #101010 center no-repeat;
+    width: 20px;
+    height: 20px;
+    background: scroll #202020 center no-repeat;
     background-size: cover;
     text-decoration: none;
 }
@@ -51,7 +50,7 @@
 
 }
 body {
-    background-color: #101010;
+    background-color: #202020;
     height: 100%;
     margin: 0;
     padding: 0;

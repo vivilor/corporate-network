@@ -1,0 +1,86 @@
+
+/* class for button panel */
+.menu-panel {
+    margin: 0;
+    padding: 0;
+    border: none;
+    list-style-type: none;
+    z-index: 20;
+}
+
+.menu-item {
+    margin: 0 -2px;
+    padding: 0;
+    border: none;
+    z-index: 21;
+}
+
+.btn {
+    background-color: #101010;
+    border: none;
+    color: #DFDFDF;
+    padding: 15px;
+    text-decoration: none;
+    transition: 0.1s linear;
+    z-index: 22;
+}
+
+.btn-icon {
+    background-attachment: scroll;
+    background-color: #101010;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    transition: inherit;
+    width: 14px;
+    height: 14px;
+    z-index: 22;
+}
+
+.btn-caption {
+    background-color: #101010;
+    color: #DFDFDF;
+    letter-spacing: 2px;
+    transition: inherit;
+    z-index: 22;
+}
+
+#clients-btn-icon   { background-image: url('/img/clients.png'); }
+#services-btn-icon  { background-image: url('/img/services.png'); }
+#equipment-btn-icon { background-image: url('/img/equip.png'); }
+#reports-btn-icon   { background-image: url('/img/report.png'); }
+#logout-btn-icon    { background-image: url('/img/logout.png'); }
+
+.menu-item:hover,
+.menu-item:hover .btn,
+.menu-item:hover .btn-icon,
+.menu-item:hover .btn-caption
+{
+    /*filter: invert(1);*/
+    color: #DFDFDF;
+    background-color: #4F4F4F;
+}
+
+body {
+    background-color: #101010;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+}
+
+.txt-default {
+    color: #dfdfdf;
+}
+
+.logo {
+    background-image: url(../img/logo.png);
+    background-repeat: no-repeat;
+    background-position: center;
+    background-attachment: scroll;
+    background-size: contain;
+    vertical-align: middle;
+    width: 18%;
+    height: 74px;
+}
+

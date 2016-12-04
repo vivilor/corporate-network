@@ -1,24 +1,32 @@
 <?php
-
-function pack_form($action, $method, $content)
+include_once 'packer.php';
+function pack_form($action, $method, $class, $content)
 {
     return pack_in_paired_tag(
         "form",
         array(
-            "class" => "form center segoe-ui h14pt",
+            "class" => "form segoe-ui h14pt " . $class,
             "action" => $action,
             "method" => $method
         ),
         $content
     );
 }
-
-
-function pack_form_tip($tip_text, $style)
+/*
+function pack_form_row($content, $class)
 {
     return pack_in_paired_tag(
-        "span",
-        array("class" => "center"),
+        "div",
+        array( "class" => "form-row v-center relative" . $class ),
+        $content
+    );
+}
+*/
+function pack_form_tip($tip_text, $class)
+{
+    return pack_in_paired_tag(
+        "div",
+        array("class" => "form-tip t-margin b-margin v-center relative" . $class),
         $tip_text
     );
 }
@@ -47,32 +55,36 @@ function pack_text_field($name, $placeholder, $classes, $label="",
                 "name" => $name,
                 "type" => ($pswd ? "password" : "text"),
                 "class" => "input-text relative clear segoe-ui h14pt",
-                "placeholder" => $placeholder
+                "placeholder" => $placeholder,
+                "required" => ""
             )
         )
     );
 }
 
 
-function pack_form_btns()
+function pack_form_btns($disabled)
 {
     return pack_in_paired_tag(
         "div",
-        array( "class" => "form-btns relative center", ),
+        array( "class" => "form-row t-margin relative center", ),
         pack_in_single_tag(
             "input",
             array(
+                "id" => "btn-reset",
                 "type" => "reset",
-                "class" => "btn segoe-ui h14pt relative",
+                "class" => "btn segoe-ui h14pt relative leftfloat",
                 "value" => "Очистить"
             )
         ) .
         pack_in_single_tag(
             "input",
             array(
+                "id" => "btn-submit",
                 "type" => "submit",
-                "class" => "btn segoe-ui h14pt relative leftfloat",
-                "value" => "Продолжить"
+                "class" => "btn segoe-ui h14pt relative rightfloat",
+                "value" => "Продолжить",
+                ($disabled ? "disabled" : "") => ""
             )
         )
     );

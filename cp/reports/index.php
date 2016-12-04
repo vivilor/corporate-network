@@ -17,7 +17,7 @@
     if (!isset($_GET['r_year']) &&
         !isset($_GET['r_month']))
     {
-        include '../utils/db_connect.php';
+        include '../utils/db.php';
         require 'input.html';
         exit();
     }
@@ -37,7 +37,7 @@
             </thead>
             <tbody>
                 <?php
-                require '../utils/db_connect.php';
+                require '../utils/db.php';
                 $r_month = $_GET['r_month'];
                 $r_year = $_GET['r_year'];
                 $query_text = "SELECT reportServiceTitle,

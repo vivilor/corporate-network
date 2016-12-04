@@ -1,4 +1,5 @@
 <?php
+include_once "db.php";
 
 if(!empty($_GET['username']))
 {
@@ -6,20 +7,34 @@ if(!empty($_GET['username']))
 }
 if(isset($username))
 {
-	
-	/*
-	$login = 'utility';
-	$password = '4r4r4r4r$';
-	require "db_connect.php";
-	$mysql_responce = $pdo->query("SELECT * FROM mysql.user WHERE user = $username");
+	$priv_check_user = 'priv_check';
+	$password = '4r4r4r4r_';
+	$connection = mysql_dbconnect(
+		$priv_check_user,
+		$password,
+		"cloudware"
+	);
+	$pdo = $connection['PDO'];
+	if(!$pdo)
+	{
+		echo $connection['PDOException'];
+		exit();
+	}
+	$mysql_responce = $pdo->query(
+		"SELECT ugUserGroupName 
+		 FROM `cloudware`.`user_group_relation`
+		 WHERE ugUserAccountName = \"" . $username. "\""
+	);
 	if(!$mysql_responce->fetchAll())
 	{
-		echo 1;
+		echo 0;
+		exit();
 	}
 	else
 	{
-		echo 0;
+		echo 1;
+		exit();
 	}
-	*/
+	
 }
 ?>

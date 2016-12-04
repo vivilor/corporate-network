@@ -5,25 +5,28 @@
     margin: 0;
     padding: 0;
     border: none;
-    height: 55px;
+    height: 45px;
     z-index: 20;
 }
 
 .btn,
-.btn[disabled='disabled'] {
-    background-color: #202020;
+.btn:disabled {
     border: none;
-    color: #DFDFDF;
     letter-spacing: 1px;
-    margin: 0 -2px;
-    padding: 15px;
+    padding: 10px;
     text-decoration: none;
     transition: background-color .2s linear;
     z-index: 20;
     cursor: pointer;
 }
 
-.btn[disabled='disabled'] {
+.btn {
+    background-color: #202020;
+    color: #DFDFDF;
+}
+
+.btn:disabled {
+    color: #A0A0A0;
     background-color: #3F3F3F;
 }
 
@@ -44,9 +47,12 @@
 }
 
 .btn:focus {
+    outline: none;
     background-color: #3F3F3F;
 }
-
+.btn:after {
+    background-color: #202020;
+}
 
 #clients-icon       { background-image: url('/img/clients.png'); }
 #management-icon    { background-image: url('/img/management.png'); }
@@ -103,52 +109,60 @@
 }
 
 .form {
-    width: 600px;
-    margin: 60px auto;
+    background-color: #131313;
+    width: 800px;
+    margin: 0 auto;
     display: block;
     padding: 10px;
     z-index: 20;
 }
 
-.form-btns {
-    width: 100%;
-    height: 55px;
+.form-tip {
+    z-index: 22;
 }
 
-.input-row {
-    width: 600px;
-    height: 55px;
+.form-row {
+    height: 45px;
+    width: 100%;
+    z-index: 21;
 }
 
 .input-element {
-    padding: 10px;
-    z-index: 20;
+    padding: 10px 0;
+    z-index: 22;
 }
 
 .clear {
-    border: 1px solid #DFDFDF;
-    background-color: #1F1F1F;
+    outline: none;
     color: #DFDFDF;
 }
 
 .wrong {
-    border: 1px solid #DF1F1F;
-    background-color:  #FFBBBB;
-    color: #202020;
+    outline: 1px solid #DF1F1F;
+    color: #FFBBBB;
 }
 
 .correct {
-    border: 1px solid #1FDF1F;
-    background-color: #BBFFBB;
+    outline: 1px solid #1FDF1F;
+    color: #BBFFBB;
 }
 
 .input-text {
-    z-index: 20;
+    background-color: #202020;
+    z-index: 23;
     height: 30px;
-    width: 200px;
-    margin: -1px;
+    width: 350px;
+    border: none;
+    padding: 10px;
     transition: 0.2s linear;
 }
+
+.input-text:focus {
+    background-color: #3F3F3F;
+    outline: none;
+}
+
+
 
 .logo {
     background-image: url(../img/logo.png);

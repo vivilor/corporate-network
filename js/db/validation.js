@@ -1,29 +1,33 @@
 function setWrong() {
-    $("#usr-login")
+    $("#usr-name")
         .removeClass("clear")
         .removeClass("correct")
         .addClass("wrong")
 }
 
 function setClear() {
-    $("#usr-login")
+    $("#usr-name")
         .removeClass("correct")
         .removeClass("wrong")
         .addClass("clear");
 }
 
 function setCorrect() {
-    $("#usr-login")
+    $("#usr-name")
         .removeClass("wrong")
         .removeClass("clear")
         .addClass("correct");
 }
 
 function validate() {
-    var field_val = $('#usr-login').val();
-    if(field_val == '')
+    var field_val = $('#usr-name').val();
+    if(field_val == '' &&  $("#usr-pswd").val() == '')
+    {
         setClear();
+        $("#btn-submit").attr("disabled", "disabled");
+    }
     else
+        $("#btn-submit").removeAttr("disabled");
         $.ajax({
             url: 'cp/utils/validate.php',
             type: 'GET',
@@ -35,10 +39,40 @@ function validate() {
                 { setCorrect();}
                 if (data == '0')
                 { setWrong(); }
-            }});
+            }
+        }
+    );
 }
 
-$(function(){
-    $("#usr-login")
-        .keyup(validate);
-});
+$(document).ready(
+    function(){
+        $("form").slideDown({
+            duration: 600,
+            easing: "swing"
+        });
+
+
+        $("#usr-name").blur(validate);
+
+
+        $("#btn-reset").click(
+            function() {
+                $("#btn-submit").attr("disabled", "disabled");
+                setClear();
+            }
+        );
+
+
+        $("#usr-pswd").blur(
+            function() {
+                if($('#usr-name').val() == '' && $("#usr-pswd").val() == '')
+                {
+                    setClear();
+                    $("#btn-submit").attr("disabled", "disabled");
+                }
+                else
+                    $("#btn-submit").removeAttr("disabled");
+            }
+        );
+    }
+);

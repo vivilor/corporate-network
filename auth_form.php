@@ -1,5 +1,7 @@
 <?php
+include_once 'elements/form.php';
 include_once 'elements/menu.php';
+
 
 echo "
 <!DOCTYPE html>
@@ -15,18 +17,19 @@ echo use_stylesheets(array(
     ));
 echo use_scripts(array(
         'js/jquery-3.1.1.min.js',
-        'js/db/validation.js'
+        'js/db/validation.js',
+        'js/auth.js'
     ));
 echo "</head><body>";
 echo pack_button_bar(1);
-echo pack_form(
-    "auth.php", "get",
+echo pack_form("auth.php", "get", " hidden",
     pack_form_tip(
         "Используйте логин и пароль, выданные Вам администратором системы.",
-    "") .
-    pack_text_field("usr-name", "Логин", "center inline") .
-    pack_text_field("usr-pswd", "Пароль", "center iniine", "", 1) .
-    pack_form_btns()
+        ""
+    ) .
+    pack_text_field("usr-name", "Логин", "") .
+    pack_text_field("usr-pswd", "Пароль", "", "", 1)  .
+    pack_form_btns(1)
 );
 echo "
 </body>

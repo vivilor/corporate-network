@@ -1,3 +1,6 @@
+<?php
+include_once 'elements/packer.php';
+?>
 <!DOCTYPE html>
 <html>
 <head>
@@ -7,11 +10,13 @@
     <link href="css/fonts.css" type="text/css" rel="stylesheet">
     <title>Страница входа</title>
 </head>
-<body class="bkg-default">
+<body>
     <div class="center">
         <div id="start" class="logo"></div>
-        <a href="auth.php" class="btn-default inline russia h14pt">
-            Войти
+        <a href="auth.php" class="btn inline relative">
+            <?
+            $bt
+            ?>
         </a>
     </div>
 </body>

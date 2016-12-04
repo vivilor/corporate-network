@@ -578,6 +578,78 @@ def gen_orders(clients,
             
 start_date = dateStorage(1, 6, 2010)
 
+
+
+def gen_tatoo_clients():
+    streets_moscow = utils.read_file_as_list_in_utf8('streets_moscow.txt')
+    streets_len = len(streets_moscow)-1
+
+    birth_start = dateStorage(1, 1, 1960)
+    birth_end = dateStorage(31, 12, 1998)
+
+    output_file = codecs.open('tatoo_clients_query.sql', 'w', 'utf-8')
+    table_columns = ['Name', 'Birthday', 'Phone_number', 'Address']
+
+    query_part = "INSERT INTO `tatoo-salon`.`clients`("
+    for col in table_columns:
+        query_part += (col + ', ')
+
+    query_part = query_part[:-2]
+    query_part += ') VALUES('
+
+
+    for i in range(8000):
+        query_gen_part = '\''
+        query_gen_part += gen_names(1, 70)[0]
+        query_gen_part += '\', \''
+        query_gen_part += gen_date(birth_start, birth_end).SQLformat()
+        query_gen_part += '\', '
+        query_gen_part += '89'
+        query_gen_part += str(randint(191218276, 899948975))
+        query_gen_part += ', \''
+        query_gen_part += streets_moscow[randint(0, streets_len)]
+        query_gen_part += '\');\n'
+        output_file.write(query_part + query_gen_part)
+        print(i)
+
+
+def gen_schedules():
+    table_columns = ['P_id', 'D_id', 'Record_date', 'Room']
+    service_start = dateStorage(5, 7, 2010)
+    service_end = dateStorage(1, 9, 2016)
+    output_file = codecs.open('tatoo_schedules_query.sql', 'w', 'utf-8')
+
+    query_part = "INSERT INTO `tatoo-salon`.`schedule`("
+    for col in table_columns:
+        query_part += (col + ', ')
+
+    dates = gen_sorted_dates(service_start, service_end, 20000)
+
+    query_part = query_part[:-2]
+    query_part += ') VALUES('
+
+    for i in range(20000):
+        query_gen_part = ''
+        query_gen_part += str(randint(1, 8003))
+        query_gen_part += ', '
+        query_gen_part += str(randint(1, 3))
+        query_gen_part += ', \''
+        query_gen_part += dates[i].SQLformat()
+        query_gen_part += ' '
+        query_gen_part += str(randint(9, 20))
+        query_gen_part += ':'
+        query_gen_part += str(randint(10, 59))
+        query_gen_part += ':00\', '
+        query_gen_part += str(randint(1, 3))
+        query_gen_part += ');\n'
+        output_file.write(query_part + query_gen_part)
+        print('Created row #' + str(i))
+
+
+
+
+#gen_tatoo_clients()
+gen_schedules()
 '''
 a = dateStorage(1, 1, 1960)
 b = dateStorage(31, 12, 1997)

@@ -1,64 +1,153 @@
-.btn-default {
-    color: #dfdfdf;
-    padding: 12px;
-    z-index: 11;
-    text-decoration: none;
+
+/* class for button panel */
+.btn-bar {
     background-color: #202020;
+    margin: 0;
+    padding: 0;
+    border: none;
+    height: 55px;
+    z-index: 20;
 }
 
-.btn-default a,
-.btn-default a div,
-.btn-default a span {
-    z-index: 12;
-    position: relative;
+.btn,
+.btn[disabled='disabled'] {
+    background-color: #202020;
+    border: none;
+    color: #DFDFDF;
+    letter-spacing: 1px;
+    margin: 0 -2px;
+    padding: 15px;
+    text-decoration: none;
+    transition: background-color .2s linear;
+    z-index: 20;
+    cursor: pointer;
+}
+
+.btn[disabled='disabled'] {
+    background-color: #3F3F3F;
 }
 
 .btn-icon {
-    width: 20px;
-    height: 20px;
-    background: scroll #202020 center no-repeat;
+    background-attachment: scroll;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
     background-size: cover;
-    text-decoration: none;
+    width: 14px;
+    height: 14px;
+    z-index: 20;
 }
 
-.btn-default,
-.btn-default a,
-.btn-default a div,
-.btn-default a span {
-    transition: linear 0.2s; }
 
-.btn-default a span {
-    display: none;
+.btn:hover {
+    background-color: #2F2F2F;
 }
 
-.btn-default:hover,
-.btn-default:hover a,
-.btn-default:hover a div {
-    display: inline-block;
-    color: #dfdfdf;
-    filter: invert(1);
-
+.btn:focus {
+    background-color: #3F3F3F;
 }
 
-.btn-default:hover a span {
-    display: inline-block;
-    filter: invert(1);
-}
 
-.btn-default:hover .btn-container .btn-icon {
-    background-color: #DFDFDF;
+#clients-icon       { background-image: url('/img/clients.png'); }
+#management-icon    { background-image: url('/img/management.png'); }
+#orders-icon        { background-image: url('/img/order.png'); }
+#reports-icon       { background-image: url('/img/reports.png'); }
+#stat-icon          { background-image: url('/img/stat.png'); }
+#services-icon      { background-image: url('/img/services.png'); }
+#equip-icon         { background-image: url('/img/equip.png'); }
+#report-icon        { background-image: url('/img/report.png'); }
+#logout-icon        { background-image: url('/img/logout.png'); }
 
-}
-body {
-    background-color: #202020;
-    height: 100%;
+
+.tile-bar {
     margin: 0;
     padding: 0;
-    width: 100%;
+    border: none;
+    z-index: 20;
 }
 
-.txt-default {
-    color: #dfdfdf;
+.tile {
+    background-color: #161616;
+    color: #DFDFDF;
+    z-index: 22;
+    width: 200px;
+    height: 200px;
+    margin: 2px;
+    letter-spacing: 1px;
+    text-decoration: none!important;
+    transition: background-color 0.2s linear;
+}
+
+.tile-icon {
+    background-attachment: scroll;
+    background-color: transparent;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: cover;
+    z-index: 22;
+    width: 60px;
+    height: 60px;
+    margin: calc((200px - 60px)/2);
+}
+
+.tile-caption {
+    background-color: transparent;
+    transition-delay: -0.1s;
+    margin: 5px;
+    z-index: 22;
+    bottom: 0;
+}
+
+.tile:hover {
+    background-color: #3F3F3F;
+}
+
+.form {
+    width: 600px;
+    margin: 60px auto;
+    display: block;
+    padding: 10px;
+    z-index: 20;
+}
+
+.form-btns {
+    width: 100%;
+    height: 55px;
+}
+
+.input-row {
+    width: 600px;
+    height: 55px;
+}
+
+.input-element {
+    padding: 10px;
+    z-index: 20;
+}
+
+.clear {
+    border: 1px solid #DFDFDF;
+    background-color: #1F1F1F;
+    color: #DFDFDF;
+}
+
+.wrong {
+    border: 1px solid #DF1F1F;
+    background-color:  #FFBBBB;
+    color: #202020;
+}
+
+.correct {
+    border: 1px solid #1FDF1F;
+    background-color: #BBFFBB;
+}
+
+.input-text {
+    z-index: 20;
+    height: 30px;
+    width: 200px;
+    margin: -1px;
+    transition: 0.2s linear;
 }
 
 .logo {
@@ -70,8 +159,5 @@ body {
     vertical-align: middle;
     width: 18%;
     height: 74px;
-}
-
-.btn-container {
 }
 

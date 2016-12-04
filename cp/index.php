@@ -13,11 +13,9 @@ if( ($_GET['back'] == 1) || !$_GET)
     </head>
     <body>
             <?
-            $menu_element = $_SERVER['DOCUMENT_ROOT'] . '/elements/menu.php';
-            $exit_btn_only = 1;
-            require $menu_element;
-            $tiles = 1;
-            require $menu_element;
+            require '../elements/menu.php';
+            echo pack_button_bar(1);
+            echo pack_tile_bar();
             ?>
     </body>
     </html>

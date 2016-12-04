@@ -1,10 +1,16 @@
 <?php
+/*
 if($_GET['quit'] == 1) {
-    require 'start.html';
+    require 'start.php';
+    exit();
+	
 }
 else 
 {
-	require 'start.html';
+	require 'start.php';
 }
+*/
+
+echo "<!DOCTYPE html><html>";
 ?>
 

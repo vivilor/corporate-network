@@ -13,7 +13,7 @@ if( ($_GET['back'] == 1) || !$_GET)
     </head>
     <body>
             <?
-            require '../elements/menu.php';
+            require '../php/menu.php';
             echo pack_button_bar(1);
             echo pack_tile_bar();
             ?>

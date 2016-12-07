@@ -1,6 +1,6 @@
 <?php
 include_once 'packer.php';
-function pack_form($action, $method, $class, $content)
+function pack_form($action, $method, $content, $class="")
 {
     return pack_in_paired_tag(
         "form",
@@ -22,7 +22,7 @@ function pack_form_row($content, $class)
     );
 }
 */
-function pack_form_tip($tip_text, $class)
+function pack_form_tip($tip_text, $class="")
 {
     return pack_in_paired_tag(
         "div",
@@ -32,12 +32,12 @@ function pack_form_tip($tip_text, $class)
 }
 
 
-function pack_text_field($name, $placeholder, $classes, $label="",
+function pack_text_field($name, $placeholder, $class="", $label="",
     $pswd=0)
 {
     return pack_in_paired_tag(
         "div",
-        array("class" => "input-element " . $classes),
+        array("class" => "input-element " . $class),
         $label != "" ?
             pack_in_paired_tag(
                 "label",
@@ -63,7 +63,7 @@ function pack_text_field($name, $placeholder, $classes, $label="",
 }
 
 
-function pack_upper_text($id, $class, $content, $active)
+function pack_upper_text($content, $active, $id="", $class="")
 {
     return pack_in_paired_tag(
         "div",
@@ -77,7 +77,7 @@ function pack_upper_text($id, $class, $content, $active)
     );
 }
 
-function pack_text($id, $class, $content)
+function pack_text($content, $id="", $class="")
 {
     return pack_in_paired_tag(
         "div",

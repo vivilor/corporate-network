@@ -1,16 +1,14 @@
 <?php
 /*
 if($_GET['quit'] == 1) {
-    require 'start.php';
+    require 'auth.php';
     exit();
-	
+
 }
-else 
+else
 {
 	require 'start.php';
 }
 */
-
-echo "<!DOCTYPE html><html>";
 ?>
 

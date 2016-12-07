@@ -19,6 +19,35 @@ function use_scripts($scripts)
 }
 
 
+function pack_document_head($title, $includes)
+{
+    return "
+        <head>
+            <title>" . $title . "</title>
+            <meta charset=\"utf-8\">" .
+            $includes .
+        "</head>";
+}
+
+
+function pack_document_body($content)
+{
+    return
+        "<body>"
+            . $content .
+        "</body>";
+}
+
+function pack_document($content)
+{
+    return
+        "<!DOCTYPE html>
+        <html>"
+            . $content .
+        "</html>";
+}
+
+
 function pack_in_paired_tag($tag, $attributes, $content)
 {
     $new_content = "<" . $tag . " ";

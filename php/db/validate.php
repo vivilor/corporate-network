@@ -23,7 +23,7 @@ if(isset($username))
 	$mysql_responce = $pdo->query(
 		"SELECT ugUserGroupName 
 		 FROM `cloudware`.`user_group_relation`
-		 WHERE ugUserAccountName = \"" . $username. "\""
+		 WHERE ugUserAccountName = \"" . $username. "\";"
 	);
 	if(!$mysql_responce->fetchAll())
 	{

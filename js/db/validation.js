@@ -29,7 +29,7 @@ function validate() {
     else
         $("#btn-submit").removeAttr("disabled");
         $.ajax({
-            url: 'cp/utils/validate.php',
+            url: '../php/db/validate.php',
             type: 'GET',
             data: {username:field_val},
             dataType: 'text',
@@ -50,19 +50,33 @@ $(document).ready(
             duration: 600,
             easing: "swing"
         });
+                    console.log('PENIS');
 
+        $("#srv-msg0").slideDown({
+            duration: 800,
+            easing: "swing"
+        });
+            console.log('PENIS');
 
         $("#usr-name").blur(validate);
 
 
         $("#btn-reset").click(
             function() {
+
                 $("#btn-submit").attr("disabled", "disabled");
                 setClear();
             }
         );
-
-
+        $("#pop-up-btn0").click(
+            function() {
+                console.log('PENIS');
+                $("#srv-msg0").slideUp({
+                    duration: 400,
+                    easing: "swing"
+                });
+            }
+        );
         $("#usr-pswd").blur(
             function() {
                 if($('#usr-name').val() == '' && $("#usr-pswd").val() == '')

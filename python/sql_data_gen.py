@@ -598,7 +598,7 @@ def gen_tatoo_clients():
     query_part += ') VALUES('
 
 
-    for i in range(8000):
+    for i in range(2000):
         query_gen_part = '\''
         query_gen_part += gen_names(1, 70)[0]
         query_gen_part += '\', \''
@@ -623,14 +623,14 @@ def gen_schedules():
     for col in table_columns:
         query_part += (col + ', ')
 
-    dates = gen_sorted_dates(service_start, service_end, 20000)
+    dates = gen_sorted_dates(service_start, service_end, 2000)
 
     query_part = query_part[:-2]
     query_part += ') VALUES('
 
-    for i in range(20000):
+    for i in range(2000):
         query_gen_part = ''
-        query_gen_part += str(randint(1, 8003))
+        query_gen_part += str(randint(1, 2000))
         query_gen_part += ', '
         query_gen_part += str(randint(1, 3))
         query_gen_part += ', \''

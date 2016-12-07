@@ -5,7 +5,7 @@
     margin: 0;
     padding: 0;
     border: none;
-    height: 45px;
+    height: 44px;
     z-index: 20;
 }
 
@@ -69,6 +69,76 @@
                       /*background-size: cover;*/
                       width: 24px;
                       height: 24px;}
+
+/*
+.bg-error {
+
+
+<div style="padding: 15px;
+width: 100%;
+display: inline-block;
+position: absolute;
+z-index: 84;
+background-color: rgba(100, 100, 100, 0.7);">
+<div style='top: -1px; width: 24px; height: 24px; background-image: url("img/buttons/deny.png"); vertical-align: middle; display: inline-block; position: relative; z-index: 100; background-size: cover;'>
+</div>
+<div style="display: inline-block; position: relative; z-index: 90;">ERROR. There is no mysql connection</div>
+<div style='top: 5px; width: 16px; height: 16px; right: 36px; background-image: url("img/buttons/cancel.png"); display: inline; position: absolute; z-index: 100; cursor: pointer; background-size: cover;'>
+</div>
+</div>
+
+.pop-up-msg {
+
+*/
+
+.pop-up-warning { background-color: rgba(160, 160, 0, 0.95) }
+.pop-up-warning div.pop-up-icon {
+    background-image: url("/img/buttons/warning.png");
+    background-color: transparent;
+}
+
+
+.pop-up-error   { background-color: rgba(160, 0, 0, 0.95) }
+.pop-up-error div.pop-up-icon {
+    background-image: url("/img/buttons/error.png");
+    background-color: transparent;
+}
+
+.pop-up-info    { background-color: rgba(0, 160, 160, 0.95) }
+.pop-up-info div.pop-up-icon {
+    background-image: url("/img/buttons/info.png");
+    background-color: transparent
+}
+
+.pop-up-btn {
+    background-image: url("/img/buttons/cancel.png");
+    background-size: cover;
+    right: 35px;
+    top: 5px;
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+.pop-up-icon {
+    width: 24px;
+    height: 24px;
+    z-index: 101;
+    background-size: contain;
+    background-repeat: no-repeat;
+}
+
+.pop-up-msg {
+    top: 2px;
+    left: 12px;
+}
+
+.pop-up {
+    padding: 15px;
+    width: 100%;
+    position: absolute;
+    z-index: 40;
+}
 
 
 .tile-bar {
@@ -137,7 +207,7 @@
 }
 
 .form-row {
-    height: 45px;
+    height: 44px;
     width: 100%;
     z-index: 21;
 }

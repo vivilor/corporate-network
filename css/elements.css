@@ -62,7 +62,13 @@
 #services-icon      { background-image: url('/img/services.png'); }
 #equip-icon         { background-image: url('/img/equip.png'); }
 #report-icon        { background-image: url('/img/report.png'); }
-#logout-icon        { background-image: url('/img/logout.png'); }
+#logout-icon        { background-image: url('/img/buttons/logout.png');
+                      background-attachment: scroll;
+                      background-repeat: no-repeat;
+                      background-position: center;
+                      /*background-size: cover;*/
+                      width: 24px;
+                      height: 24px;}
 
 
 .tile-bar {
@@ -117,7 +123,16 @@
     z-index: 20;
 }
 
+.upper-text {
+    padding: 10px 0;
+}
+
+.text {
+    padding: 10px 0;
+}
+
 .form-tip {
+    padding: 10px 0;
     z-index: 22;
 }
 
@@ -136,6 +151,9 @@
     outline: none;
     color: #DFDFDF;
 }
+
+.turned-off { color: #FFBBBB; }
+.turned-on { color: #BBFFBB; }
 
 .wrong {
     outline: 1px solid #DF1F1F;

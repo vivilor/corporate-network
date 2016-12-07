@@ -1,6 +1,9 @@
 
 /* font-size */
+.h10pt  { font-size: 10pt }
+.h12pt  { font-size: 12pt }
 .h14pt  { font-size: 14pt }
+.h16pt  { font-size: 16pt }
 .h20pt  { font-size: 20pt }
 .h26pt  { font-size: 26pt }
 .h32pt  { font-size: 32pt }

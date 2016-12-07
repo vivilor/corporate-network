@@ -26,7 +26,7 @@ function pack_form_tip($tip_text, $class)
 {
     return pack_in_paired_tag(
         "div",
-        array("class" => "form-tip t-margin b-margin v-center relative" . $class),
+        array("class" => "form-tip v-center relative" . $class),
         $tip_text
     );
 }
@@ -63,6 +63,31 @@ function pack_text_field($name, $placeholder, $classes, $label="",
 }
 
 
+function pack_upper_text($id, $class, $content, $active)
+{
+    return pack_in_paired_tag(
+        "div",
+        array(
+            "id" => $id,
+            "class" => "upper-text relative segoe-ui h10pt inline v-top " .
+                ($active ? " turned-on" : " turned-off").
+                $class
+        ),
+        $content
+    );
+}
+
+function pack_text($id, $class, $content)
+{
+    return pack_in_paired_tag(
+        "div",
+        array(
+            "id" => $id,
+            "class" => "text segoe-ui h16pt inline" . $class
+        ),
+        $content
+    );
+}
 function pack_form_btns($disabled)
 {
     return pack_in_paired_tag(

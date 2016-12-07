@@ -23,6 +23,8 @@ echo use_scripts(array(
 echo "</head><body>";
 echo pack_button_bar(1);
 echo pack_form("auth.php", "get", " hidden",
+    pack_text("", "", "Авторизация") .
+    pack_upper_text("", "", "активна", 1) .
     pack_form_tip(
         "Используйте логин и пароль, выданные Вам администратором системы.",
         ""

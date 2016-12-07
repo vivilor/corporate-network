@@ -68,10 +68,11 @@ function pack_button_bar($exit_btn_only)
 		$btns .= pack_in_paired_tag(
 			"a",
 			array(
+				"id" => "logout-icon",
 				"href" => $menu[count($menu)],
 				"class" => "btn inline relative rightfloat"
 			),
-			$menu_list[count($menu)]
+			"" /*$menu_list[count($menu)]/*/
 		);
 	}
 	else

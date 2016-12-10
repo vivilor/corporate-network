@@ -266,3 +266,118 @@
     height: 74px;
 }
 
+
+
+.year-select {
+    position: absolute;
+    width: 450px;
+}
+
+
+.select-field {
+    margin: 0;
+    border: none;
+    width: 80px;
+    padding: 10px;
+    outline: none;
+    background-color: #2f2f2f;
+    color: #DFDFDF;
+}
+
+option {
+    outline: none;
+    margin: 0;
+    padding: 5px;
+    border: none;
+}
+
+
+
+
+
+.clndr-cell {
+    width: 120px;
+    position: relative;
+    height: 120px;
+    transition: .2s linear;
+}
+
+
+.clndr-cell:hover {
+    background-color: #1f1f1f;
+    cursor: pointer;
+}
+
+
+.clndr-cell:active {
+    background-color: #2F2F2F;
+}
+
+.clndr-chosed {
+    outline: 1px solid #FFFF00;
+}
+
+.clndr-caption {
+    padding: 0;
+    position: relative;
+    left: 10px;
+    z-index: 41;
+}
+
+
+.clndr-month-index {
+    float: left;
+    font-size: 30pt;
+    font-weight: 500;
+    position: relative;
+    left: 5px;
+    z-index: 41;
+}
+
+.clndr-month-name-en {
+    position: absolute;
+    bottom: 35px;
+    right: 5px;
+    color: #a1a1a1;
+}
+
+.clndr-month-name-ru {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+}
+
+/*
+<div style="
+    width: 120px;
+    position: absolute;
+    top: 120px;
+    left: 100px;
+    height: 120px;
+">
+  <div class="large" style="
+    font-size: 30pt;
+    font-weight: 500;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+">01
+  </div>
+  <div class="tiny" style="
+    position: absolute;
+    top: 9px;
+    left: 45px;
+">создан
+  </div>
+  <div class="small" style="
+    position: absolute;
+    bottom: 35px;
+    right: 5px;
+    color: #a1a1a1;
+">September  </div>
+  <div class="medium" style="
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+">Сентябрь  </div></div>
+*/

@@ -5,9 +5,10 @@
 
 .tiny   { font-size: 10pt }
 .small  { font-size: 12pt }
+.little { font-size: 14pt }
 .medium { font-size: 16pt }
 .big    { font-size: 20pt }
-.large  { font-size: 24pt }
+.large  { font-size: 30pt }
 
 .h16pt  { font-size: 16pt }
 .h20pt  { font-size: 20pt }

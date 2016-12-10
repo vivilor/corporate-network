@@ -70,8 +70,8 @@ function pack_upper_text($content, $active, $id="", $class="")
         "div",
         array(
             "id" => $id,
-            "class" => "upper-text relative segoe-ui h10pt inline v-top " .
-                ($active ? " turned-on" : " turned-off").
+            "class" => "upper-text segoe-ui tiny " .
+                ($active ? " turned-on " : " turned-off ").
                 $class
         ),
         $content

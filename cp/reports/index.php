@@ -1,15 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Создание отчета</title>
-    <link href='/css/elements.css' type='text/css' rel='stylesheet'>
-    <link href='/css/common.css' type='text/css' rel='stylesheet'>
-    <link href='/css/fonts.css' type='text/css' rel='stylesheet'>
-</head>
-<body>
-    <?php
-    $tiles = 0; /* for menu */
+<?php
+
+session_start();
+
+$doc_root = $_SERVER['DOCUMENT_ROOT'];
+
+
+
+if(!isset($_GET["rep_year"]) && !isset($_GET["rep_month"]))
+{
+    require_once "input.php";
+    exit();
+}
+else
+{
+    require_once "show_report.php";
+    exit();
+}
+
+
+    /*
+    $tiles = 0;
     $username = 'root';
     $password = '';
     $dbname = 'cloudware';
@@ -29,7 +39,7 @@
                 <h3>Отчет</h3>
                 <br><br>
             </div>
-        <table border="0" width="100%" class='segoe-ui h14pt'>
+        <table border="0" width="100%" class='segoe-ui small'>
             <thead>
                 <th align="center">Название услуги</th>
                 <th align="center">Количество клиентов</th>
@@ -81,6 +91,5 @@
         <br><br><br>
         </div>
         <?
-    }?>
-</body>
-</html>
+    }*/
+?>

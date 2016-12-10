@@ -12,7 +12,6 @@
 .btn,
 .btn:disabled {
     border: none;
-    letter-spacing: 1px;
     padding: 10px;
     text-decoration: none;
     transition: background-color .2s linear;
@@ -35,10 +34,21 @@
     background-color: transparent;
     background-repeat: no-repeat;
     background-position: center;
-    background-size: cover;
-    width: 14px;
-    height: 14px;
+    background-size: contain;
+    width: 24px;
+    height: 24px;
     z-index: 20;
+}
+
+.side-bar {
+    float: left;
+    z-index: 30;
+    width: 44px;
+    bottom: 0;
+    top: 44px;
+}
+.side-btn {
+    background-color: #101010;
 }
 
 
@@ -54,59 +64,41 @@
     background-color: #202020;
 }
 
-#clients-icon       { background-image: url('/img/clients.png'); }
-#management-icon    { background-image: url('/img/management.png'); }
-#orders-icon        { background-image: url('/img/order.png'); }
-#reports-icon       { background-image: url('/img/reports.png'); }
-#stat-icon          { background-image: url('/img/stat.png'); }
-#services-icon      { background-image: url('/img/services.png'); }
-#equip-icon         { background-image: url('/img/equip.png'); }
-#report-icon        { background-image: url('/img/report.png'); }
-#logout-icon        { background-image: url('/img/buttons/logout.png');
-                      background-attachment: scroll;
-                      background-repeat: no-repeat;
-                      background-position: center;
-                      /*background-size: cover;*/
-                      width: 24px;
-                      height: 24px;}
-
-/*
-.bg-error {
+#btn-clients-icon       { background-image: url('/img/buttons/clients.png'); }
+#btn-management-icon    { background-image: url('/img/buttons/management.png'); }
+#btn-orders-icon        { background-image: url('/img/buttons/orders.png'); }
+#btn-reports-icon       { background-image: url('/img/buttons/reports.png'); }
+#btn-stat-icon          { background-image: url('/img/buttons/stat.png'); }
+#btn-equip-icon         { background-image: url('/img/buttons/equip.png'); }
+#btn-logout-icon        { background-image: url('/img/buttons/logout.png'); }
+#btn-view-icon          { background-image: url('/img/buttons/view.png'); }
+#btn-add-icon           { background-image: url('/img/buttons/add.png'); }
+#btn-add-report-icon    { background-image: url('/img/buttons/add-report.png'); }
 
 
-<div style="padding: 15px;
-width: 100%;
-display: inline-block;
-position: absolute;
-z-index: 84;
-background-color: rgba(100, 100, 100, 0.7);">
-<div style='top: -1px; width: 24px; height: 24px; background-image: url("img/buttons/deny.png"); vertical-align: middle; display: inline-block; position: relative; z-index: 100; background-size: cover;'>
-</div>
-<div style="display: inline-block; position: relative; z-index: 90;">ERROR. There is no mysql connection</div>
-<div style='top: 5px; width: 16px; height: 16px; right: 36px; background-image: url("img/buttons/cancel.png"); display: inline; position: absolute; z-index: 100; cursor: pointer; background-size: cover;'>
-</div>
-</div>
 
-.pop-up-msg {
-
-*/
-
-.pop-up-warning { background-color: rgba(160, 160, 0, 0.95) }
+.pop-up-warning { background-color: rgba(172, 172, 0, 0.8) }
 .pop-up-warning div.pop-up-icon {
     background-image: url("/img/buttons/warning.png");
     background-color: transparent;
 }
 
 
-.pop-up-error   { background-color: rgba(160, 0, 0, 0.95) }
+.pop-up-error   { background-color: rgba(144, 0, 0, 0.8) }
 .pop-up-error div.pop-up-icon {
     background-image: url("/img/buttons/error.png");
     background-color: transparent;
 }
 
-.pop-up-info    { background-color: rgba(0, 160, 160, 0.95) }
+.pop-up-info    { background-color: rgba(0, 128, 128, 0.8) }
 .pop-up-info div.pop-up-icon {
     background-image: url("/img/buttons/info.png");
+    background-color: transparent
+}
+
+.pop-up-success   { background-color: rgba(0, 144, 0, 0.8) }
+.pop-up-info div.pop-up-icon {
+    background-image: url("/img/buttons/success.png");
     background-color: transparent
 }
 
@@ -139,6 +131,18 @@ background-color: rgba(100, 100, 100, 0.7);">
     position: absolute;
     z-index: 40;
 }
+
+
+.report-overview
+{
+    width: 450px;
+    position: absolute;
+    left: 44px;
+    border: 1px solid;
+}
+
+
+
 
 
 .tile-bar {
@@ -194,7 +198,7 @@ background-color: rgba(100, 100, 100, 0.7);">
 }
 
 .upper-text {
-    padding: 10px 0;
+    padding: 5px 0;
 }
 
 .text {
@@ -241,7 +245,7 @@ background-color: rgba(100, 100, 100, 0.7);">
     height: 30px;
     width: 350px;
     border: none;
-    padding: 10px;
+    padding: 5px 10px;
     transition: 0.2s linear;
 }
 
@@ -249,7 +253,6 @@ background-color: rgba(100, 100, 100, 0.7);">
     background-color: #3F3F3F;
     outline: none;
 }
-
 
 
 .logo {

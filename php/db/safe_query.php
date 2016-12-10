@@ -1,23 +1,19 @@
 <?php
-if(isset($_GET['query_text'])) $query_text = $_GET['query_text'];
-if(isset($_GET['username']))   $username = $_GET['username'];
-if(isset($query_text) &&
-   isset($username))
-try
-{
-    /* Type: PDOStatement */
-    $pdo = $_SESSION['PDO_' . $username];
 
-    $query_buffer = $pdo->query($query_text);
-
-    $query_result = $query_buffer->fetchAll();
-    $result_rows = $query_buffer->rowCount();   
-}
-catch (PDOException $e)
+function execute_query($pdo, $query_text)
 {
-    $output = "Ошибка при извлечении данных".$e->getMessage();
-    include 'error.php';
-    exit();
+    try
+    {
+        $result = $pdo->query($query_text);
+    }
+    catch(PDOException $e)
+    {
+        $error_msg = $e->getMessage();
+    }
+    return array(
+        'PDOException' => $error_msg,
+        'MySQLResponce' => $result
+    );
 }
 
 ?>

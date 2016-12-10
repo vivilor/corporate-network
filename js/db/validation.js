@@ -52,11 +52,7 @@ $(document).ready(
         });
                     console.log('PENIS');
 
-        $("#srv-msg0").slideDown({
-            duration: 800,
-            easing: "swing"
-        });
-            console.log('PENIS');
+        
 
         $("#usr-name").blur(validate);
 
@@ -68,15 +64,7 @@ $(document).ready(
                 setClear();
             }
         );
-        $("#pop-up-btn0").click(
-            function() {
-                console.log('PENIS');
-                $("#srv-msg0").slideUp({
-                    duration: 400,
-                    easing: "swing"
-                });
-            }
-        );
+        
         $("#usr-pswd").blur(
             function() {
                 if($('#usr-name').val() == '' && $("#usr-pswd").val() == '')

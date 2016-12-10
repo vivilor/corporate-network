@@ -7,7 +7,7 @@ function pack_msg($content, $class="", $id="0")
         "div",
         array(
             "id" => "srv-msg" . $id,
-            "class" => "pop-up inline absolute segoe-ui 14pt hidden " . $class
+            "class" => "pop-up inline absolute segoe-ui small hidden " . $class
         ),
         pack_in_paired_tag(
             "div",
@@ -20,7 +20,7 @@ function pack_msg($content, $class="", $id="0")
             "div",
             array(
                 "id" => "pop-up-msg",
-                "class" => "pop-up-msg inline relative segoe-ui h14pt "
+                "class" => "pop-up-msg inline relative segoe-ui small "
             ),
             $content
         ) .

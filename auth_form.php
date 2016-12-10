@@ -11,7 +11,8 @@ $includes = use_stylesheets(array(
 
 $includes .= use_scripts(array(
     'js/jquery-3.1.1.min.js',
-    'js/db/validation.js'
+    'js/db/validation.js',
+    'js/pop-up.js'
 ));
 
 $head = pack_document_head("Авторизация", $includes);

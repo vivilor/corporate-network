@@ -20,17 +20,23 @@ if (isset($_POST['usr-name']) &&
         require 'auth_form.php';
         exit();
     }
+
+    /* Starting session */
+
     session_start();
+    session_id();
+    $_SESSION['started'] = 1;
     $_SESSION['current_user'] = array(
-        $username,
-        $PASSWORDS[$username]
+        'username' => $username,
+        'password' => $PASSWORDS[$username]
     );
     $_SESSION['priv'] = array(
-        'ugPrivManagement' => $usrinfo['ugPrivManagement'],
-        'ugPrivOrders' => $usrinfo['ugPrivOrders'],
-        'ugPrivReports' => $usrinfo['ugPrivReports'],
-        'ugPrivStat' => $usrinfo['ugPrivStat']
+        'management' => $usrinfo['ugPrivManagement'],
+        'orders' => $usrinfo['ugPrivOrders'],
+        'reports' => $usrinfo['ugPrivReports'],
+        'stat' => $usrinfo['ugPrivStat']
     );
+    $_SESSION['root'] = $_SERVER['DOCUMENT_ROOT'];
     require 'auth_success.html';
     exit();
 }

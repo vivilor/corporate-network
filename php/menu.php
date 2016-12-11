@@ -30,6 +30,17 @@ $buttons_list = array(
 
 include_once 'packer.php';
 
+function pack_content_title($content)
+{
+	return pack_in_paired_tag(
+		"div",
+		array(
+			"class" => "relative content-title segoe-ui big regular"
+		),
+		$content
+	);
+}
+
 function pack_tile_bar()
 {
 	global $menu_list, $menu;

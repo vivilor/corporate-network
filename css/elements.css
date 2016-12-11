@@ -266,25 +266,43 @@
     height: 74px;
 }
 
-
-
-.year-select {
-    position: absolute;
-    width: 450px;
+.clndr-column {
+    width: 120px;
 }
 
+.content-title {
+    width: 100%;
+    padding: 10px;
+    background-color: #202020;
+    color: #dfdfdf;
+}
+
+.year-select {
+    background-color: #131313;
+    position: absolute;
+    padding: 10px;
+    width: 480px;
+}
+
+.calendar {
+    position: relative;
+    padding: 10px 0;
+    width: 480px;
+}
 
 .select-field {
-    margin: 0;
+    margin: 0 10px;
     border: none;
     width: 80px;
     padding: 10px;
     outline: none;
-    background-color: #2f2f2f;
+    background-color: #131313;
     color: #DFDFDF;
 }
 
-option {
+.select-field option {
+    background-color: #131313;
+    color: #dfdfdf;
     outline: none;
     margin: 0;
     padding: 5px;

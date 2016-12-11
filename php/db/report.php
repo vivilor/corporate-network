@@ -15,7 +15,6 @@ function get_report($pdo, $month, $year)
         return array('PDOException' => $result['PDOException']);
     return $result->fetchAll();
 }
-    
 
 
 function make_report($pdo, $month, $year)

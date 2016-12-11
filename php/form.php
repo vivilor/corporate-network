@@ -78,13 +78,37 @@ function pack_upper_text($content, $active, $id="", $class="")
     );
 }
 
+function pack_select_field($content, $class="", $id="")
+{
+
+    $rows = "";
+    foreach ($content as $row):
+        $rows .= pack_in_paired_tag(
+            "option",
+            array(
+                "class" => "segoe-ui small",
+                "value" => $row,
+            ),
+            $row
+        );
+    endforeach;
+    return pack_in_paired_tag(
+        "select",
+        array(
+            "id" => $id,
+            "class" => "select-field segoe-ui small" . $class
+        ),
+        $rows
+    );
+}
+
 function pack_text($content, $id="", $class="")
 {
     return pack_in_paired_tag(
         "div",
         array(
             "id" => $id,
-            "class" => "text segoe-ui big inline" . $class
+            "class" => "text segoe-ui inline " . $class
         ),
         $content
     );

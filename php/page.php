@@ -19,7 +19,7 @@ function pack_msg($content, $class="", $id="0")
         pack_in_paired_tag(
             "div",
             array(
-                "id" => "pop-up-msg",
+                "id" => "pop-up-msg" . $id,
                 "class" => "pop-up-msg inline relative segoe-ui small "
             ),
             $content

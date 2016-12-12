@@ -30,7 +30,7 @@ $content = pack_form("auth.php", "post",
     pack_text_field("usr-name", "Логин") .
     pack_text_field("usr-pswd", "Пароль", "", "", 1)  .
     pack_form_btns(1),
-    " hidden"
+    " hidden form"
 );
 
 $body = pack_document_body($menu . $error_msg . $content);

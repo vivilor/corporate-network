@@ -34,22 +34,21 @@ $year_select    = "";
 
 if(isset($fetched_years['PDOException']))
 {
-    $error_msg = pack_msg($fetched_years['PDOException'], "pop-up-error");
+    $error_msg  = pack_msg($fetched_years['PDOException'], "pop-up-error");
 }
 else
 {
     $year_select .= pack_select_field($fetched_years, "", "years");
 }
 
-$content = pack_text("Выберите год", "", "small") . $year_select . pack_calendar(array());
-
-$content = pack_in_paired_tag(
-    "div",
-    array(
-        "class" => "year-select"
-    ),
-    $content
+$date_select    = pack_date_select(
+    pack_text("Выберите год", "", "small") . $year_select .
+    pack_month_select(array())
 );
+
+$report_table   = pack_report_view("");
+
+$content = $date_select . $report_table;
 
 
 /*
@@ -66,7 +65,11 @@ $content = pack_in_paired_tag(
     pack_text_field("rep_year", "Год") .
     pack_text_field("rep_month", "Month") .
     pack_form_btns(0));*/
-$body = pack_document_body($menu . $error_msg . $page_title .  $content);
+
+
+
+$page_content = pack_page_content($menu . $error_msg . $page_title .  $content);
+$body = pack_document_body($page_content);
 
 echo pack_document($head . $body);
 ?>

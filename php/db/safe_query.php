@@ -12,7 +12,7 @@ function execute_query($pdo, $query_text)
     }
     return array(
         'PDOException' => $error_msg,
-        'MySQLResponce' => $result
+        'PDOStatement' => $result
     );
 }
 

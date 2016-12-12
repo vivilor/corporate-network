@@ -65,6 +65,41 @@ function pack_column($content, $number)
     );
 }     
 
+function pack_cell_option($exist, $value)
+{
+    return pack_in_paired_tag(
+        "div",
+        array(
+            "class" => "clndr-cell-btns absolute",
+        ),
+        pack_in_paired_tag(
+            "div",
+            array(
+                "id" => "btn-" .
+                    ($exist ?
+                        "view" :
+                        "add-report") .
+                "-icon",
+                "class" => "clndr-btn-icon btn-icon absolute"
+            ),
+            ""
+        ) .
+        pack_in_single_tag(
+            "input",
+            array(
+                "type" => "button",
+                "name" => "month",
+                "value" => $value,
+                "title" =>
+                    ($exist ?
+                        "Просмотреть отчет" :
+                        "Создать отчет"),
+                "class" => " btn clndr-btn absolute"
+            )
+        )
+    );
+}
+
 function pack_cell($month_index, $exist, $id="", $class="")
 {
     global $months_list;
@@ -74,6 +109,7 @@ function pack_cell($month_index, $exist, $id="", $class="")
             "id" => $id,
             "class" => "clndr-cell left " . $class
         ),
+        pack_cell_option($exist, $month_index) .
         pack_in_paired_tag(
             "div",
             array(
@@ -104,7 +140,19 @@ function pack_cell($month_index, $exist, $id="", $class="")
     );
 }
 
-function pack_calendar($columns)
+function pack_report_view($content)
+{
+    return pack_in_paired_tag(
+        "div",
+        array(
+            "id" => "report-view",
+            "class" => "report-view center inline"
+        ),
+        $content
+    );
+}
+
+function pack_month_select($columns)
 {
     $calendar = "";
     foreach ($columns as $column):
@@ -113,9 +161,21 @@ function pack_calendar($columns)
     return pack_in_paired_tag(
         "div",
         array(
-            "id" => "calendar",
-            "class" => "calendar"
+            "id" => "month-select",
+            "class" => "month-select hidden"
         ),
         $calendar
+    );
+}
+
+function pack_date_select($content)
+{
+    return pack_in_paired_tag(
+        "div",
+        array(
+            "class" => "date-select inline",
+            "id" => "date-select"
+        ),
+        $content
     );
 }

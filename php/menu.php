@@ -35,7 +35,7 @@ function pack_content_title($content)
 	return pack_in_paired_tag(
 		"div",
 		array(
-			"class" => "relative content-title segoe-ui big regular"
+			"class" => "relative content-title segoe-ui big"
 		),
 		$content
 	);
@@ -98,7 +98,7 @@ function pack_button_with_image($link, $title = "", $id = "", $style="")
 				"class" => "btn-icon relative"
 			),
 			""
-		)/*$menu_list[$i]*/
+		)
 	);
 }
 

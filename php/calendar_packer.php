@@ -76,7 +76,10 @@ foreach(array_keys($months_list) as $cur_month):
     {
         if(isset($created_reports[$cur_month]))
             $is_created = 1;
-        $column .= pack_cell($cur_month, $is_created);
+        $column .= pack_cell(
+            $cur_month,
+            
+            $is_created);
     }
     else
         $column .= pack_in_paired_tag(
@@ -99,7 +102,7 @@ foreach(array_keys($months_list) as $cur_month):
 endforeach;
 
 
-$calendar = pack_calendar($columns);
+$calendar = pack_month_select($columns);
 
 echo json_encode(array("data" => $calendar));
 exit();

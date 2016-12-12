@@ -1,6 +1,18 @@
 <?php
 include_once 'packer.php';
 
+function pack_page_content($content)
+{
+    return pack_in_paired_tag(
+        "div",
+        array(
+            "class" => "page-content"
+        ),
+        $content
+    );
+}
+
+
 function pack_msg($content, $class="", $id="0")
 {
     return pack_in_paired_tag(

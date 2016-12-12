@@ -6,7 +6,7 @@ function pack_form($action, $method, $content, $class="")
     return pack_in_paired_tag(
         "form",
         array(
-            "class" => "form segoe-ui small " . $class,
+            "class" => "segoe-ui small " . $class,
             "action" => $action,
             "method" => $method
         ),

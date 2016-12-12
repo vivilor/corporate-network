@@ -2,7 +2,7 @@
 
 include_once "packer.php";
 
-function pack_table( $content, $col_names=array(),$class="")
+function pack_table($content, $col_names=array(), $id="", $class="")
 {
     $table_rows = "";
     $table_row_cells = "";
@@ -19,36 +19,40 @@ function pack_table( $content, $col_names=array(),$class="")
     $table_head = pack_in_paired_tag(
         "thead",
         array(
-            "class" => "table-head"
+            "class" => "table-head light"
         ),
-        ""
+        $table_col_names
     );
+
     foreach($content as $row):
-        foreach($row as $cell):
+        for($i = 0; $i < count($col_names); $i++)
+        {
             $table_row_cells .= pack_in_paired_tag(
                 "td",
                 array(
                     "class" => "table-cell"
                 ),
-                $content[$row][$cell]
+                $row[$i]
             );
-        endforeach;
+        }
         $table_rows .= pack_in_paired_tag(
             "tr",
             array(
                 "class" => "table-row"
             ),
-            ""
+            $table_row_cells
         );
+        $table_row_cells = "";
     endforeach;
+
     return pack_in_paired_tag(
         "table",
         array(
-            "class" => "table"
+            "id" => $id,
+            "class" => "table segoe-ui small" . $class
         ),
         $table_head . $table_rows
     );
 }
-
 
 ?>

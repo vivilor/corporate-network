@@ -105,12 +105,13 @@
 .pop-up-btn {
     background-image: url("/img/buttons/cancel.png");
     background-size: cover;
-    right: 35px;
+    right: 5px;
     top: 5px;
     width: 16px;
     height: 16px;
     cursor: pointer;
 }
+
 
 .pop-up-icon {
     width: 24px;
@@ -127,9 +128,10 @@
 
 .pop-up {
     padding: 15px;
-    width: 100%;
+    width: 1170px;
     position: absolute;
     z-index: 40;
+
 }
 
 
@@ -140,10 +142,6 @@
     left: 44px;
     border: 1px solid;
 }
-
-
-
-
 
 .tile-bar {
     margin: 0;
@@ -266,25 +264,32 @@
     height: 74px;
 }
 
+.page-content {
+    width: 1200px;
+    margin: 0 auto;
+    background-color: #131313;
+    color: #dfdfdf;
+}
+
 .clndr-column {
     width: 120px;
 }
 
 .content-title {
-    width: 100%;
     padding: 10px;
     background-color: #202020;
     color: #dfdfdf;
+    letter-spacing: 1px;
 }
 
-.year-select {
+.date-select {
     background-color: #131313;
     position: absolute;
     padding: 10px;
     width: 480px;
 }
 
-.calendar {
+.month-select {
     position: relative;
     padding: 10px 0;
     width: 480px;
@@ -310,22 +315,75 @@
 }
 
 
+.column-caption {
+    padding: 10px;
+}
 
+.report-view {
+    height: 484px;
+    width: 680px;
+    position: relative;
+    left: 500px;
+    padding: 10px;
+    text-align: center;
+    display: none;
+}
 
 
 .clndr-cell {
+    cursor: pointer;
     width: 120px;
     position: relative;
     height: 120px;
-    transition: .2s linear;
+    transition: opacity.2s linear, background-color .2s linear;
 }
 
-
-.clndr-cell:hover {
-    background-color: #1f1f1f;
+.clndr-cell-btns {
+    top: 0;
+    right: 0;
+    width: 120px;
+    height: 120px;
+    display: none;
+    position: absolute;
+    transition: .2s linear;
+    z-index: 50;
     cursor: pointer;
 }
 
+.clndr-cell:hover {
+    background-color: #1f1f1f;
+}
+
+.clndr-btn-icon {
+    top: 48px;
+    right: 48px;
+    opacity: 1;
+    cursor: pointer;
+    z-index: 51;
+}
+
+.clndr-btn {
+    background-color: #afffaf;
+    top: 0px;
+    right: 0px;
+    width: 120px;
+    height: 120px;
+    opacity: 0;
+    cursor: pointer;
+    z-index: 52;
+}
+
+.clndr-cell:hover .clndr-cell-btns {
+    display: block;
+    background-color: #2f2f2f;
+    opacity: 0.7;
+}
+
+.clndr-cell:hover .clndr-btn {
+    display: block;
+    background-color: #2f2f2f;
+
+}
 
 .clndr-cell:active {
     background-color: #2F2F2F;
@@ -336,7 +394,6 @@
 }
 
 .clndr-caption {
-    padding: 0;
     position: relative;
     left: 10px;
     z-index: 41;
@@ -363,6 +420,31 @@
     position: absolute;
     bottom: 5px;
     right: 5px;
+}
+
+.table {
+    margin: 0 auto;
+    padding: 5px;
+}
+
+.table-col-name {
+    font-weight: 500!important;
+    padding: 3px;
+}
+
+.table-head {
+    padding: 5px;
+}
+
+.table-row {
+    padding: 2px;
+    transition: .2s linear;
+}
+.table-row:hover {
+    background-color: #2f2f2f;
+}
+.table-cell {
+    padding: 5px;
 }
 
 /*

@@ -29,7 +29,7 @@ function validate() {
     else
         $("#btn-submit").removeAttr("disabled");
         $.ajax({
-            url: '../php/db/validate.php',
+            url: '/php/db/validate.php',
             type: 'GET',
             data: {username:field_val},
             dataType: 'text',

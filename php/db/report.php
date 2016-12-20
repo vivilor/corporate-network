@@ -1,13 +1,15 @@
 <?php
+
 session_start();
 
-require_once "safe_query.php";
-require_once "db.php";
-require_once "../calendar.php";
-require_once "../table.php";
+$root = $_SERVER['DOCUMENT_ROOT'];
 
-
-
+require_once $root . '/php/engine/calendar.php';
+require_once $root . '/php/engine/table.php';
+require_once $root . '/php/engine/page.php';
+require_once $root . '/php/engine/form.php';
+require_once $root . '/php/db/safe_query.php';
+require_once $root . '/php/db/db.php';
 
 function get_report($pdo, $month, $year)
 {
@@ -18,6 +20,7 @@ function get_report($pdo, $month, $year)
         FROM `report`
         WHERE reportMonth = $month AND
               reportYear = $year";
+              
     $result = execute_query($pdo, $query_text);
 
     if(isset($result['PDOException']))
@@ -30,7 +33,9 @@ function make_report($pdo, $month, $year)
 {
     $query_text = "
         CALL `create_report`($month, $year)";
+        
     $result = execute_query($pdo, $query_text);
+    
     if(isset($result['PDOException']))
         return array('PDOException' => $result['PDOException']);
     return 1;
@@ -83,19 +88,25 @@ endforeach;
 if(!isset($created_reports[$month]))
     make_report($pdo, $month, $year);
 
+
 echo json_encode(array(
     "data" => pack_report_view(
-            pack_table(
-                get_report($pdo, $month, $year),
-                array(
-                "Назавание услуги",
-                "Кол-во клиентов",
-                "Суммарная рибыль"
-                )
+        pack_form_row(
+            pack_text(
+                "Отчет за " . $months_list[$month][1] . " " . $year . " года.",
+                "",
+                "small")
+        ) .
+        pack_table(
+            get_report($pdo, $month, $year),
+            array(
+            "Назавание услуги",
+            "Кол-во клиентов",
+            "Суммарная рибыль"
             )
         )
     )
-);
+));
 exit();
 
 ?>

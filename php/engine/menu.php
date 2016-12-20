@@ -18,12 +18,18 @@ $menu = array(
 );
 
 $buttons_list = array(
+	'add-order' => 'Оформить заказ',
 	'add-report' => 'Создать отчет',
 	'add',
-	'view' => 'Просмотр отчета',
+	'view-report' => 'Просмотр отчета',
+	'view-order' => 'Поиск заказа',
+	'delete-position' => 'Удалить позицию',
+	'add-position' => 'Добавить позицию',
+	'remove-all' => 'Удалить все позиции',
+	'book-order' => 'Оформить заказ',
 	'clients',
 	'equip',
-	'asjuster',
+	'adjuster',
 	'delete',
 	'change'
 );
@@ -112,7 +118,7 @@ function pack_side_bar($buttons, $class="")
 			"div",
 			array(
 				"id" => "btn-" . $btn,
-				"class" => "btn side-btn relative" . $class,
+				"class" => "btn side-btn relative",
 				"title" => $buttons_list[$btn]
 			),
 			pack_in_paired_tag(
@@ -128,7 +134,7 @@ function pack_side_bar($buttons, $class="")
 	return pack_in_paired_tag(
 		"div",
 		array(
-			"class" => "side-bar"
+			"class" => "side-bar " . $class,
 		),
 		$btns
 	);

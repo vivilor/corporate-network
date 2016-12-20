@@ -13,16 +13,16 @@ function pack_form($action, $method, $content, $class="")
         $content
     );
 }
-/*
-function pack_form_row($content, $class)
+
+function pack_form_row($content, $class="")
 {
     return pack_in_paired_tag(
         "div",
-        array( "class" => "form-row v-center relative" . $class ),
+        array( "class" => "form-row relative " . $class ),
         $content
     );
 }
-*/
+
 function pack_form_tip($tip_text, $class="")
 {
     return pack_in_paired_tag(
@@ -38,8 +38,8 @@ function pack_text_field($name, $placeholder, $class="", $label="",
 {
     return pack_in_paired_tag(
         "div",
-        array("class" => "input-element " . $class),
-        $label != "" ?
+        array("class" => "input-element"),
+        ($label != "" ?
             pack_in_paired_tag(
                 "label",
                 array(
@@ -48,14 +48,14 @@ function pack_text_field($name, $placeholder, $class="", $label="",
                 ),
                 $label
             ) :
-            "" . 
+            "") .
         pack_in_single_tag(
             "input",
             array(
                 "id" => $name,
                 "name" => $name,
                 "type" => ($pswd ? "password" : "text"),
-                "class" => "input-text relative clear segoe-ui small",
+                "class" => "input-text relative clear segoe-ui small " . $class,
                 "placeholder" => $placeholder,
                 "required" => ""
             )
@@ -78,7 +78,7 @@ function pack_upper_text($content, $active, $id="", $class="")
     );
 }
 
-function pack_select_field($content, $class="", $id="")
+function pack_select_field($content, $name="", $class="", $label="")
 {
 
     $rows = "";
@@ -93,12 +93,27 @@ function pack_select_field($content, $class="", $id="")
         );
     endforeach;
     return pack_in_paired_tag(
-        "select",
-        array(
-            "id" => $id,
-            "class" => "select-field segoe-ui small" . $class
-        ),
-        $rows
+        "div",
+        array("class" => "input-element"),
+        ($label != "" ?
+            pack_in_paired_tag(
+                "label",
+                array(
+                    "for" => $name,
+                    "class" => "left relative segoe-ui small"
+                ),
+                $label
+            ) :
+            ""
+        ) .
+        pack_in_paired_tag(
+            "select",
+            array(
+                "class" => "select-field segoe-ui small " . $class,
+                "name" => $name
+            ),
+            $rows
+        )
     );
 }
 
@@ -117,13 +132,13 @@ function pack_form_btns($disabled)
 {
     return pack_in_paired_tag(
         "div",
-        array( "class" => "form-row t-margin relative center", ),
+        array( "class" => "form-row relative v-space", ),
         pack_in_single_tag(
             "input",
             array(
                 "id" => "btn-reset",
                 "type" => "reset",
-                "class" => "btn segoe-ui small relative leftfloat",
+                "class" => "btn segoe-ui small relative",
                 "value" => "Очистить"
             )
         ) .

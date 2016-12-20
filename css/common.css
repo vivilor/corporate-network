@@ -16,14 +16,20 @@
 .v-center   { vertical-align: middle }
 .v-top      { vertical-align: top }
 .v-bottom   { vertical-align: bottom }
-
+.laft-space { margin-left: 10px }
+.right-space { margin-right: 10px }
 .t-margin   { margin-top: 30px; }
 .b-margin   { margin-bottom: 30px; }
+
+.v-space    { padding-top: 10px; padding-bottom: 10px; }
+.h-space    { padding-left: 10px; padding-right: 10px; }
+
 .t-padding  { padding-top: 10px; }
 .v-padding  { padding-bottom: 10px; }
 
 .clear-b-padding { padding-bottom: 0 }
 
+.light { background-color: #202020 }
 
 #start {
     margin: 80px 41% 60px 41%;

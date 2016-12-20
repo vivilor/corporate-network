@@ -10,6 +10,7 @@ function show_countdown()
     
     var tick = setInterval(function() {
         i--;
+        console.log(i);
         set_value(show_div, i);
         if(i == 0) {
             clearInterval(tick);

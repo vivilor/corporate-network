@@ -146,7 +146,7 @@ function pack_report_view($content)
         "div",
         array(
             "id" => "report-view",
-            "class" => "report-view center inline"
+            "class" => "report-view center"
         ),
         $content
     );

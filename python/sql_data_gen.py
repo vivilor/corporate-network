@@ -212,7 +212,7 @@ def oldest_date_index(dates):
 
 
 def gen_date(start, stop):
-    seed()
+
     if not compare_date(start, stop):
         return start
     if start.dsYear == stop.dsYear:
@@ -264,6 +264,7 @@ def gen_date(start, stop):
 
 
 def gen_dates(date_start, date_stop, quantity):
+    seed()
     return list(gen_date(date_start, date_stop) for i in range(quantity))
 
 def gen_sorted_dates(date_start, date_stop, quantity):
@@ -616,7 +617,7 @@ def gen_tatoo_clients():
 def gen_schedules():
     table_columns = ['P_id', 'D_id', 'Record_date', 'Room']
     service_start = dateStorage(5, 7, 2010)
-    service_end = dateStorage(1, 9, 2016)
+    service_end = dateStorage(1, 2, 2017)
     output_file = codecs.open('tatoo_schedules_query.sql', 'w', 'utf-8')
 
     query_part = "INSERT INTO `tatoo-salon`.`schedule`("
@@ -627,29 +628,63 @@ def gen_schedules():
 
     query_part = query_part[:-2]
     query_part += ') VALUES('
+    n = 1
+    record_date = dateStorage(5, 7, 2014)
+    while True:
 
-    for i in range(2000):
-        query_gen_part = ''
-        query_gen_part += str(randint(1, 2000))
-        query_gen_part += ', '
-        query_gen_part += str(randint(1, 3))
-        query_gen_part += ', \''
-        query_gen_part += dates[i].SQLformat()
-        query_gen_part += ' '
-        query_gen_part += str(randint(9, 20))
-        query_gen_part += ':'
-        query_gen_part += str(randint(10, 59))
-        query_gen_part += ':00\', '
-        query_gen_part += str(randint(1, 3))
-        query_gen_part += ');\n'
-        output_file.write(query_part + query_gen_part)
-        print('Created row #' + str(i))
+        record_num = randint(0, 6)
+        masters_time = [ [] for i in range(3) ]
+
+        for i in range(0, record_num):
+            master_id = randint(1, 3)
+            query_gen_part = ''
+            query_gen_part += str(randint(1, 2000))
+            query_gen_part += ', '
+            query_gen_part += str(master_id)
+            query_gen_part += ', \''
+            query_gen_part += record_date.SQLformat()
+            query_gen_part += ' '
+
+            if(master_id == 1):
+                busy_time = 9 + 2 * randint(0, 2)
+                for free_time in masters_time[0] :
+                    if(free_time != busy_time):
+                        print(">> 1")
+                        masters_time[0].append(busy_time)
+                        break
+                query_gen_part += \
+                    '0' + str(busy_time) if busy_time < 10 else str(busy_time)
+            if(master_id == 2):
+                busy_time = 12 + 2 * randint(0, 2)
+                for free_time in masters_time[1]:
+                    if (free_time != busy_time):
+                        print(">> 2")
+                        masters_time[1].append(busy_time)
+                        break
+                query_gen_part += str(busy_time)
+            if(master_id == 3):
+                busy_time = 15 + 2 * randint(0, 2)
+                for free_time in masters_time[2]:
+                    if (free_time != busy_time):
+                        print(">> 3")
+                        masters_time[2].append(busy_time)
+                        break
+                query_gen_part += str(busy_time)
+
+            query_gen_part += ':00:00\', '
+            query_gen_part += str(master_id)
+            query_gen_part += ');\n'
+            output_file.write(query_part + query_gen_part)
+            print('Created row #' + str(n))
+            n += 1
+        record_date.add_day()
+        if(not compare_date(record_date, service_end)):
+            return
 
 
 
-
-#gen_tatoo_clients()
-gen_schedules()
+gen_tatoo_clients()
+#gen_schedules()
 '''
 a = dateStorage(1, 1, 1960)
 b = dateStorage(31, 12, 1997)

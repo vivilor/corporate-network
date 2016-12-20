@@ -3,7 +3,7 @@ function use_stylesheets($filenames)
 {
     $blocks = "";
     foreach($filenames as $filename):
-        $blocks .= ("<link href=\"" . $filename . "\" rel=\"stylesheet\">");
+        $blocks .= ("<link href=\"" . $filename . "\" rel=\"stylesheet\" type=\"text/css\">");
     endforeach;
     return $blocks;
 }

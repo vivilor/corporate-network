@@ -64,4 +64,22 @@ function find_role($username, $password)
     $usrGroup = $q->fetch();
     return $usrGroup;
 }
+
+
+function establish_connection_for_role()
+{
+    $username = $_SESSION['current_user']['username'];
+    $password = $_SESSION['current_user']['password'];
+    $response = mysql_dbconnect($username, $password, 'cloudware');
+
+    if(isset($responce["PDOException"]))
+    {
+        echo json_encode(array(
+            "error" => $responce["PDOException"]
+        ));
+        exit();
+    }
+
+    return $response['PDO'];
+}
 ?>

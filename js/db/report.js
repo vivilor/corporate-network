@@ -22,20 +22,20 @@ function show_calendar(data)
     else
     {
         $('#month-select')
-            .empty()
-            .replaceWith(data['data']);
+        .empty()
+        .replaceWith(data['data']);
         $('#month-select').slideDown({
                 duration: 400,
                 easing: "swing"
         });
         $("input[name='month']").click(function () {
-            retrieve_report($(this).val())
+            retrieve_report($(this).val(), is_created($(this)))
         });
     }
 }
 
 
-function show_report(data)
+function show_report(data, year, is_created)
 {
     console.log(data['error']);
     console.log(data['data']);
@@ -57,13 +57,17 @@ function show_report(data)
     }
     else
     {
-        var report_view = $('#report-view');
-        report_view.empty();
-        report_view.replaceWith(data['data']);
-        report_view.slideDown({
+        $('#report-view')
+        .empty()
+        .replaceWith(data['data']);
+        $('#report-view').slideDown({
                 duration: 400,
                 easing: "swing"
         });
+        if(!is_created)
+        {
+            retrieve_data(year);
+        }
     }
 }
 
@@ -74,7 +78,7 @@ function retrieve_data(year) {
                 easing: "swing"
     });
     $.ajax({
-        url: '../../php/calendar_packer.php',
+        url: '../../php/db/calendar.php',
         type:'POST',
         dataType: 'json',
         data: {
@@ -88,16 +92,28 @@ function retrieve_data(year) {
 }
 
 
-function retrieve_report(chosen_month)
+function is_created($selected)
+{
+    var button_div = $selected.parent();
+    var cell_div = button_div.parent();
+    var cell_caption = cell_div.find(".small-text");
+    if(cell_caption.hasClass("turned-on"))
+    {
+        return 1;
+    }
+    return 0;
+}
+
+function retrieve_report(chosen_month, is_created)
 {
     $('#report-view').slideUp({
                 duration: 400,
                 easing: "swing"
         });
-    var chosen_year = $("#years").val();
+    var chosen_year = $("select[name='years']").val();
     console.log("Ajax started");
     $.ajax({
-        url: '../../php/db/report.php',
+        url: '/php/db/report.php',
         type:'POST',
         dataType: 'json',
         data: {
@@ -106,20 +122,18 @@ function retrieve_report(chosen_month)
         },
         success: function(data)
         {
-            show_report(data)
+            show_report(data, chosen_year, is_created)
         }
     });
 }
 
 
-
-
 function report_events()
 {
-    retrieve_data($("select#years").val());
+    retrieve_data($("select[name='years']").val());
 
     $("#years").change(function () {
-        var selected_year = $("select#years").val();
+        var selected_year = $("select[name='years']").val();
         retrieve_data(selected_year);
     });
 

@@ -2,10 +2,12 @@
 
 session_start();
 
-require_once 'calendar.php';
-require_once 'db/db.php';
-require_once 'db/safe_query.php';
-require_once 'packer.php';
+$root = $_SERVER['DOCUMENT_ROOT'];
+
+require_once $root . '/php/engine/calendar.php';
+require_once $root . '/php/engine/packer.php';
+require_once $root . '/php/db/safe_query.php';
+require_once $root . '/php/db/db.php';
 
 $quartals = array("I","II","III","IV");
 
@@ -78,7 +80,6 @@ foreach(array_keys($months_list) as $cur_month):
             $is_created = 1;
         $column .= pack_cell(
             $cur_month,
-            
             $is_created);
     }
     else

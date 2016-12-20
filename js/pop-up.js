@@ -1,5 +1,5 @@
 function pop_up_events() {
-    if($('#pop-up-msg').text() != "")
+    if($('#pop-up-msg0').text() != "")
     {
         $("#srv-msg0").slideDown({
             duration: 800,

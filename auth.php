@@ -1,4 +1,12 @@
 <?php
+
+if (isset($_GET['auth_needed']))
+{
+    $warning = "Для продолжения работы необходимо авторизоваться";
+    require 'auth_form.php';
+    exit();
+}
+
 if (isset($_POST['usr-name']) &&
     isset($_POST['usr-pswd']))
 {
@@ -46,4 +54,5 @@ else
     require 'auth_form.php';
     exit();
 }
+
 ?>

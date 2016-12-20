@@ -32,7 +32,7 @@ function pack_msg($content, $class="", $id="0")
             "div",
             array(
                 "id" => "pop-up-msg" . $id,
-                "class" => "pop-up-msg inline relative segoe-ui small "
+                "class" => "pop-up-msg inline relative segoe-ui small regular"
             ),
             $content
         ) .

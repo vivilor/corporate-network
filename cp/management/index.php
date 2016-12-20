@@ -10,7 +10,7 @@ if(!isset($_SESSION['current_user']))
 
 $root = $_SERVER['DOCUMENT_ROOT'];
 
-require $root . "/php/views/reports.php";
+require $root . "/php/views/management.php";
 
 exit();
 

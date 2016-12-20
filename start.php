@@ -1,6 +1,8 @@
 <?php
 
-include_once 'php/packer.php';
+$root = $_SERVER['DOCUMENT_ROOT'];
+
+include_once $root . '/php/engine/packer.php';
 
 $includes = use_stylesheets(array(
     "css/elements.css",

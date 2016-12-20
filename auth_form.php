@@ -1,7 +1,10 @@
 <?php
-include_once 'php/form.php';
-include_once 'php/menu.php';
-include_once 'php/page.php';
+
+$root = $_SERVER['DOCUMENT_ROOT'];
+
+include_once $root . '/php/engine/form.php';
+include_once $root . '/php/engine/menu.php';
+include_once $root . '/php/engine/page.php';
 
 $includes = use_stylesheets(array(
     "css/elements.css",
@@ -14,16 +17,19 @@ $includes .= use_scripts(array(
     'js/db/validation.js',
     'js/pop-up.js'
 ));
+$title = "Авторизация";
 
-$head = pack_document_head("Авторизация", $includes);
+$page_title = pack_content_title($title);
+
+$head = pack_document_head($title, $includes);
 
 $menu = pack_button_bar(1);
 
-$error_msg = isset($pdo_error) ? pack_msg($pdo_error, "pop-up-error") : "";
+$msg = "";
+if(isset($warning)) $msg = pack_msg($warning, "pop-up-warning", '0');
+if(isset($pdo_error)) $msg =  pack_msg($pdo_error, "pop-up-error", '0');
 
 $content = pack_form("auth.php", "post",
-    pack_text("Авторизация") .
-    //pack_upper_text("активна", 1) .
     pack_form_tip(
         "Используйте логин и пароль, выданные Вам администратором системы."
     ) .
@@ -33,7 +39,11 @@ $content = pack_form("auth.php", "post",
     " hidden form"
 );
 
-$body = pack_document_body($menu . $error_msg . $content);
+$body = pack_document_body(
+    pack_page_content(
+        $menu . $msg . $page_title . $content
+    )
+);
 
 echo pack_document($head . $body);
 

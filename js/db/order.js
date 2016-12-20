@@ -185,9 +185,8 @@ function show_pop_up_success(text)
 }
 
 var position_to_insert;
-var refresh_flag;
 
-function get_position_fields(type)
+function get_position_fields(type, pointer)
 {
     //if(refresh_flag)
         $.ajax({
@@ -204,11 +203,14 @@ function get_position_fields(type)
                     return;
                 }
                 var current_index = position_to_insert.index();
+                /*
                 fields = $(
                     "li.order-position:eq(" +
                         current_index  +
                     ") div.order-position-fields"
-                );
+                );*/
+                fields = position_to_insert.find("div.order-position-fields");
+                fields.slideUp();
                 fields.remove();
                 position_to_insert.append(data['data']);
                 console.log("Sliding down fields with index: " + current_index);
@@ -220,46 +222,47 @@ function get_position_fields(type)
                     ") div.order-position-fields"
                 );
                 fields.slideDown();
-                //refresh_flag = 0;
                 /* code here for catching changes in blocks */
             }
         });
 }
 
-
-function order_list_events(data, time)
-{
-    refresh_flag = 1;
-    $("ul#orders-list")
-        .append(data['data'])
-        .on("click", "li div#btn-delete-position", function () {
-            $(this).parent().parent().remove();
-        })
-        .on("click", "select.order-type", function() {
-            refresh_flag = 1;
-        })
-        .on("change", "select.order-type", function() {
-            position_to_insert = $(this).parent().parent().parent();
-            if($(this).val() == 'Услуга')
-            {
-                get_position_fields(0);
-                //refresh_flag = 0;
-            }
-            else
-            {
-                get_position_fields(1);
-                //refresh_flag = 0;
-            }
-            event.stopPropagation();
-        });
-    position_to_insert = $("li.order-position:last");
-    console.log("Length: " + position_to_insert.length);
-    position_to_insert.slideDown();
-    if(time)
-        get_position_fields(0);
+function remove_position() {
+    $(this).parent().parent().remove();
 }
 
+function select_fields_type(eventHandler) {
+    position_to_insert = $(this).parent().parent().parent();
+    if($(this).val() == 'Услуга')
+        get_position_fields(0, $(this));
+    else
+        get_position_fields(1, $(this));
+    eventHandler.stopImmediatePropagation();
+}
+
+function order_list_events(data)
+{
+    $("ul#orders-list")
+        .append(data['data']);
+    $("li div#btn-delete-position")
+        .on("click", remove_position);
+    $(".order-type")
+        .on("change", select_fields_type);
+
+    position_to_insert = $("li.order-position:last");
+
+    console.log("Length: " + position_to_insert.length);
+
+    position_to_insert.slideDown();
+
+    get_position_fields(0, position_to_insert);
+}
+
+var book_enable;
+
 function add_position() {
+    if(!book_enable)
+        book_enable = 1;
     $.ajax({
         url: "/php/db/order.php",
         type: "POST",
@@ -269,12 +272,13 @@ function add_position() {
         },
         success: function(data)
         {
-            order_list_events(data, 1);
+            order_list_events(data);
         }
     });
 }
 
 function remove_all() {
+    book_enable = 0;
     $("ul#orders-list").empty();
 }
 
@@ -288,6 +292,7 @@ function start_ordering(data) {
         return;
     }
     $("#order-client-search").replaceWith(data['data']);
+    $("#btn-book-order").attr("display", "none");
     $("#order-client-info").slideDown({
                 duration: 400,
                 easing: 'swing'
@@ -296,11 +301,11 @@ function start_ordering(data) {
                 duration: 400,
                 easing: 'swing'
             });
+
     //show_pop_up_success("Клиент найден. Доступно оформление заказа");
     $("#btn-add-position").click(add_position);
     $("#btn-remove-all").click(remove_all);
 }
-
 
 
 function search_client() {

@@ -78,7 +78,7 @@ function retrieve_data(year) {
                 easing: "swing"
     });
     $.ajax({
-        url: '../../php/db/calendar.php',
+        url: '/php/db/calendar.php',
         type:'POST',
         dataType: 'json',
         data: {
@@ -110,7 +110,7 @@ function retrieve_report(chosen_month, is_created)
                 duration: 400,
                 easing: "swing"
         });
-    var chosen_year = $("select[name='years']").val();
+    var chosen_year = $("select[name=years]").val();
     console.log("Ajax started");
     $.ajax({
         url: '/php/db/report.php',
@@ -130,10 +130,11 @@ function retrieve_report(chosen_month, is_created)
 
 function report_events()
 {
-    retrieve_data($("select[name='years']").val());
+    retrieve_data($("select[name=years]").val());
 
-    $("#years").change(function () {
-        var selected_year = $("select[name='years']").val();
+    $("select[name=years]").change(function () {
+        console.log("success");
+        var selected_year = $("select[name=years]").val();
         retrieve_data(selected_year);
     });
 

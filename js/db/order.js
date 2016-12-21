@@ -230,11 +230,35 @@ function get_position_fields(type, pointer)
     });
 }
 
-function remove_position() {
-    var position = $(this).parent().parent().parent();
-    $(this).parent().parent().remove();
+function remove_receipt_position(index)
+{
+    $("li.receipt-position:eq(" + index + ")").remove();
+    var $i = 1;
+    jQuery.each($("div.receipt-position-index"), function () {
+        $(this).text($i);
+        $i++;
+    });
+    $.ajax({
+        url: "/php/db/order.php",
+        type: "POST",
+        dataType: "json",
+        data: {
+            "removed_index": index
+        },
+        success: function(data)
+        {
+            $("#receipt-summary-cost").text(data['order_cost']);
+        }
+    });
+}
+
+function remove_position(eventHandler) {
+    var position = $(this).parent().parent();
+    remove_receipt_position(position.index());
+    position.remove();
     if($("li.order-position").length == '0')
         set_order_confirm_button(0);
+    eventHandler.stopImmediatePropagation();
 }
 
 function select_fields_type(eventHandler) {
@@ -249,9 +273,13 @@ function select_fields_type(eventHandler) {
 function order_list_events(data)
 {
     $("ul#orders-list")
-        .append(data['data']);
+        .append(data['order_data']);
+    $("ul#receipt-list")
+        .append(data['receipt_data']);
+    $("#receipt-summary-cost")
+        .text(data['order_cost']);
     $("li div#btn-delete-position")
-        .on("click", remove_position);
+        .on("click", remove_position );
     $(".order-type")
         .on("change", select_fields_type);
 
@@ -282,6 +310,19 @@ function add_position() {
 function remove_all() {
     set_order_confirm_button(0);
     $("ul#orders-list").empty();
+    $("ul#receipt-list").empty();
+    $.ajax({
+        url: "/php/db/order.php",
+        type: "POST",
+        dataType: "json",
+        data: {
+            "remove_all": "true"
+        },
+        success: function (data)
+        {
+            show_pop_up_success("Корзина успешно очищена");
+        }
+    });
 }
 
 function start_ordering(data) {
@@ -293,7 +334,7 @@ function start_ordering(data) {
         );
         return;
     }
-    $("#order-client-search").replaceWith(data['data']);
+    $("#order-client").empty().append(data['data']);
     console.log("Disabling order confirmation first time");
     $("#btn-book-order").attr("style", "display: none;");
 
@@ -308,7 +349,7 @@ function start_ordering(data) {
     $("#receipt-client-name").text(
         data['clientName'] + ' ' + data['clientSurname']
     );
-    
+
     $("#receipt-client-id").text(data['clientID']);
     $("#receipt-client-sex").text(data['clientSex']);
     $("#receipt-client-funds").text(data['clientFunds']);
@@ -321,6 +362,23 @@ function start_ordering(data) {
     //show_pop_up_success("Клиент найден. Доступно оформление заказа");
     $("#btn-add-position").click(add_position);
     $("#btn-remove-all").click(remove_all);
+}
+
+
+function remember_client()
+{
+    $.ajax({
+        url: "/php/db/order.php",
+        type: "POST",
+        dataType: "json",
+        data: {
+            "remember_order_client": "true"
+        },
+        success: function(data)
+        {
+            start_ordering(data);
+        }
+    });
 }
 
 
@@ -379,7 +437,6 @@ function show_order_client_search()
 }
 
 
-
 function prepare_ordering()
 {
     console.log('Previously selected client not found');
@@ -390,6 +447,7 @@ function prepare_ordering()
 function allow_ordering(data)
 {
     console.log('Found previously selected client with ID = ' + data);
+    remember_client();
 }
 
 function check_previous_selection()
@@ -408,7 +466,6 @@ function check_previous_selection()
                 prepare_ordering();
             else
                 allow_ordering(data);
-
         }
     });
 }

@@ -584,3 +584,33 @@
 #receipt-logo {
     width: 190px;
 }
+
+.receipt-position-index,
+.receipt-position-quantity {
+    width: 30px;
+}
+
+.receipt-position-type {
+    width: 105px;
+}
+
+.receipt-position-name {
+    width: 250px;
+}
+
+#receipt-summary-cost {
+    left: 400px;
+    width: 100px;
+}
+
+.receipt-position-cost {}
+
+.receipt-list {
+    margin: 0;
+    border: none;
+    list-style: none;
+    padding: 0;
+}
+
+
+

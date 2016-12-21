@@ -377,4 +377,60 @@ function pack_receipt_content()
     );
 }
 
+
+function pack_receipt_position($index, $type, $name, $quantity, $cost)
+{
+    return pack_in_paired_tag(
+        "li",
+        array(
+            "class" => "receipt-position",
+        ),
+        pack_form_row(
+            pack_text($index, "", "h-space receipt-position-index") .
+            pack_text(
+                ($type ? "Оборудование" : "Услуга"),
+                "", "h-space receipt-position-type") .
+            pack_text($name, "", "h-space regular receipt-position-name") .
+            pack_text($quantity, "", "h-space receipt-position-quantity") .
+            pack_text($cost, "", "h-space regular receipt-position-cost") .
+            pack_text("руб.", "", "receipt-position-cost"),
+            "small"
+        )
+    );
+}
+
+function pack_receipt_positions_header()
+{
+    return pack_form_row(
+        pack_text("№", "", "h-space regular receipt-position-index") .
+        pack_text("Тип", "", "h-space regular receipt-position-type") .
+        pack_text("Наименование", "", "h-space regular receipt-position-name") .
+        pack_text("N", "", "h-space regular receipt-position-quantity") .
+        pack_text("Цена", "", "h-space regular receipt-position-cost")
+    , "t-margin") .
+    pack_in_paired_tag(
+        "ul",
+        array(
+            "id" => "receipt-list",
+            "class" => "receipt-list"
+        ),
+        ""
+    ).
+    pack_in_paired_tag(
+        "div",
+        array(
+            "id" => "receipt-summary-cost",
+            "class" => "h40pt segoe-ui regular relative inline"
+        ),
+        "0"
+    ).
+    pack_in_paired_tag(
+        "div",
+        array(
+            "id" => "",
+            "class" => "medium segoe-ui relative inline"
+        ),
+        "Итого в рублях (RUR):"
+    );
+}
 ?>

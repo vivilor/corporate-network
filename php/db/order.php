@@ -19,6 +19,17 @@ function append_to($src, &$dest)
 }
 
 
+function positions_shift(&$array, $index)
+{
+    $array_len = count($array);
+    for($i = $index; $i < ($array_len - 1); $i++)
+    {
+        $array[$i] = $array[$i + 1];
+    }
+    unset($array[$array_len - 1]);
+}
+
+
 function get_order_info($pdo, $id)
 {
     $order_info = array();
@@ -112,8 +123,67 @@ function get_order_info($pdo, $id)
 }
 
 
+function store_prices($pdo)
+{
+    $_SESSION['prices_storage'] = array(
+        "0" => array(),
+        "1" => array()
+    );
+
+    /* Obtaining equip prices */
+
+    $query_text = "SELECT `equipDesc`, `equipCost` FROM `equip`;";
+    $result = execute_query($pdo, $query_text);
+    if(isset($result['PDOException']))
+        return array('PDOException' => $result['PDOException']);
+    $equip_prices = $result['PDOStatement']->fetchAll();
+
+    /* Obtaining service prices */
+
+    $query_text = "SELECT `serviceTitle`, `serviceCost` FROM `service`;";
+    $result = execute_query($pdo, $query_text);
+    if(isset($result['PDOException']))
+    return array('PDOException' => $result['PDOException']);
+
+    $service_prices = $result['PDOStatement']->fetchAll();
+
+    foreach($equip_prices as $price):
+        $_SESSION['prices_storage']['1'][$price['equipDesc']]
+            = $price['equipCost'];
+    endforeach;
+
+    foreach($service_prices as $price):
+        $_SESSION['prices_storage']['0'][$price['serviceTitle']]
+            = $price['serviceCost'];
+    endforeach;
+
+    return array("success" => "true");
+}
+
+
+function append_position($type, $name, $quantity="1", $technitian="")
+{
+    $_SESSION['order_positions'][count($_SESSION['order_positions'])] =
+        array($type, $name, $quantity, $technitian);
+}
+
+function change_position_cost($index, $new_quantity)
+{
+    $type = $_SESSION['order_positions'][$index][0];
+    $name = $_SESSION['order_positions'][$index][1];
+    $quantity = $new_quantity - $_SESSION['order_positions'][$index][2];
+    $_SESSION['order_cost'] =
+        $_SESSION['order_cost'] + $quantity *
+            $_SESSION['prices_storage'][$type][$name];
+}
+
 function get_order_form_options($pdo, $type)
 {
+    if( isset($_SESSION['options'][$type]) )
+        return array(
+            'type' => $type,
+            'options' => $_SESSION['options'][$type]
+        );
     if($type)
     {
         $query_text = "
@@ -137,6 +207,9 @@ function get_order_form_options($pdo, $type)
         array_push($options, $row[0]);
     endforeach;
 
+    if( !isset($_SESSION['options']) )
+        $_SESSION['options'] = array($type => $options);
+
     return array(
         'type' => $type,
         'options' => $options
@@ -149,7 +222,11 @@ function set_client_for_order($pdo, $passport_serial, $passport_number)
     $query_text = "
         SELECT `client`.`clientID`,
                `client`.`clientName`,
-               `client`.`clientSurname`
+               `client`.`clientSurname`,
+               `client`.`clientSex`,
+               `client`.`clientFunds`,
+               `client`.`clientPhoneNumber`,
+               `client`.`clientEMail`
         FROM `cloudware`.`client`
         WHERE `clientPassportSerial` = " . $passport_serial . " AND 
               `clientPassportNumber` = " . $passport_number . ";";
@@ -176,14 +253,117 @@ if( isset($_POST['passport_serial']) &&
         $pdo, $passport_serial, $passport_number
     );
     //$_SESSION['current_order_client_id'] = $client_info['clientID'];
-
+    $_SESSION['order_cost'] = 0;
+    $_SESSION['order_positions'] = array();
     echo json_encode(array(
         "data" =>
             pack_order_client_info($client_info) .
-            pack_order_positions_list()
+            pack_order_positions_list(),
+        "clientID" => $client_info["clientID"],
+        "clientSex" => $client_info["clientSex"],
+        "clientName" => $client_info["clientName"],
+        "clientEMail" => $client_info["clientEMail"],
+        "clientFunds" => $client_info["clientFunds"],
+        "clientSurname" => $client_info["clientSurname"],
+        "clientPhoneNumber" => $client_info["clientPhoneNumber"],
+        "clientPassportSerial" => $passport_serial,
+        "clientPassportNumber" => $passport_number
+
     ));
     exit();
 }
+
+elseif( isset($_POST['remove_all']) )
+{
+    $_SESSION['order_positions'] = array();
+    $_SESSION['order_cost'] = 0;
+    exit();
+}
+elseif( isset($_POST['changed_index']) )
+{
+    $index = $_POST['changed_index'];
+    if( isset($_POST['changed_type']) )
+    {
+        $_SESSION['order_positions'][$index][3] = "";
+        $_SESSION['order_positions'][$index][2] = "";
+        $_SESSION['order_positions'][$index][1] = "";
+        $_SESSION['order_positions'][$index][0]
+            = $_POST['changed_type'];
+        change_position_cost($index, 0);
+    }
+    elseif( isset($_POST['changed_quantity']))
+    {
+        change_position_cost($index, $_POST['changed_quantity']);
+    }
+}
+elseif( isset($_POST['store_prices']) )
+{
+    $pdo = establish_connection_for_role();
+    store_prices($pdo);
+}
+
+/*
+    Append new position to $_SESSION['order_positions']
+    << 'selected_name', 'selected_type'
+    >> 'selected_item_price'
+*/
+elseif( isset($_POST['selected_name']) &&
+        isset($_POST['selected_type']) )
+{
+    if( isset($_POST['selected_quantity']) &&
+        isset($_POST['selected_technitian']) )
+    {
+        append_position(
+            $_POST['selected_name'],
+            $_POST['selected_type'],
+            $_POST['selected_quantity'],
+            ($_POST['selected_technitian'] == '-1' ?
+                "1" :
+                $_POST['selected_technitian'])
+        );
+        echo json_decode(array(
+            "selected_item_price" =>
+            $_SESSION
+                [$_POST['selected_type']]
+                    [$_POST['selected_name']]
+        ));
+        exit();
+    }
+    else
+    {
+        append_position(
+            $_POST['selected_name'],
+            $_POST['selected_type']);
+        echo json_decode(array(
+            "selected_item_price" =>
+            $_SESSION['prices_storage']
+                [$_POST['selected_type']]
+                    [$_POST['selected_name']]
+        ));
+        exit();
+    }
+}
+
+elseif( isset($_POST['removed_index']) )
+{
+    $multiplier = $_SESSION['order_positions']
+                    [$_POST['removed_index']]
+                        [2];
+    $name = $_SESSION['order_positions']
+                    [$_POST['removed_index']]
+                        [1];
+    $type = $_SESSION['order_positions']
+                    [$_POST['removed_index']]
+                        [0];
+    $cost = $_SESSION['prices_storage']
+                [$type]
+                    [$name];
+    if($multiplier == '')
+        $multiplier = 1;
+    positions_shift($_SESSION['order_positions'], $_POST['removed_index']);
+    $_SESSION['order_cost'] -= ($multiplier * $cost);
+}
+
 elseif( isset($_POST['add_position']) )
 {
     echo json_encode(array(
@@ -191,6 +371,7 @@ elseif( isset($_POST['add_position']) )
     ));
     exit();
 }
+
 elseif( isset($_POST['check']) )
 {
     if( isset($_SESSION['current_order_client_id']) )
@@ -204,6 +385,7 @@ elseif( isset($_POST['check']) )
         exit();
     }
 }
+
 elseif( isset($_POST['retrieve_client_search_form']) )
 {
     echo json_encode(array(
@@ -211,6 +393,7 @@ elseif( isset($_POST['retrieve_client_search_form']) )
     ));
     exit();
 }
+
 elseif( isset($_POST['form_type']) )
 {
     $type = $_POST['form_type'];
@@ -222,6 +405,7 @@ elseif( isset($_POST['form_type']) )
     ));
     exit();
 }
+
 else
 {
     echo json_encode(array(

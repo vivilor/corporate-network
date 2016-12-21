@@ -48,7 +48,9 @@ $order_view = pack_order_view(
     $order_view_content
 );
 
-$receipt_view = pack_receipt_view();
+$receipt_view = pack_receipt_view(
+    pack_receipt_content()
+);
 
 $content = pack_order_entities(
     $order_view . $receipt_view

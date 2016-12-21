@@ -184,59 +184,65 @@ function show_pop_up_success(text)
     );
 }
 
-var position_to_insert;
+function set_order_confirm_button(enabled) {
+    var btn = $("#btn-book-order");
+    if(enabled)
+        btn.slideDown();
+    else
+        btn.slideUp();
+}
 
 function get_position_fields(type, pointer)
 {
-    //if(refresh_flag)
-        $.ajax({
-            url: "/php/db/order.php",
-            type: "POST",
-            dataType: "json",
-            data: {
-                "form_type": type
-            },
-            success: function(data) {
-                if(data['error'])
-                {
-                    show_pop_up_error(data['error']);
-                    return;
-                }
-                var current_index = position_to_insert.index();
-                /*
-                fields = $(
-                    "li.order-position:eq(" +
-                        current_index  +
-                    ") div.order-position-fields"
-                );*/
-                fields = position_to_insert.find("div.order-position-fields");
-                fields.slideUp();
-                fields.remove();
-                position_to_insert.append(data['data']);
-                console.log("Sliding down fields with index: " + current_index);
-
-                console.log("Length: " + position_to_insert.length);
-                fields = $(
-                    "li.order-position:eq(" +
-                        current_index  +
-                    ") div.order-position-fields"
-                );
-                fields.slideDown();
-                /* code here for catching changes in blocks */
+    console.log(pointer);
+    fields = pointer.children("div.order-position-fields");
+    console.log(fields);
+    fields.slideUp();
+    $.ajax({
+        url: "/php/db/order.php",
+        type: "POST",
+        dataType: "json",
+        data: {
+            "form_type": type
+        },
+        success: function(data) {
+            if(data['error'])
+            {
+                show_pop_up_error(data['error']);
+                return;
             }
-        });
+            var current_index = pointer.index();
+
+            fields.remove();
+            pointer.append(data['data']);
+
+            console.log("Sliding down fields with index: " + current_index);
+            console.log("Length: " + pointer.length);
+
+            fields = $(
+                "li.order-position:eq(" +
+                    current_index  +
+                ") div.order-position-fields"
+            );
+            fields.slideDown();
+            /* code here for catching changes in blocks */
+        }
+    });
 }
 
 function remove_position() {
+    var position = $(this).parent().parent().parent();
     $(this).parent().parent().remove();
+    if($("li.order-position").length == '0')
+        set_order_confirm_button(0);
 }
 
 function select_fields_type(eventHandler) {
-    position_to_insert = $(this).parent().parent().parent();
+    var pointer = $(this).parent().parent().parent();
     if($(this).val() == 'Услуга')
-        get_position_fields(0, $(this));
+        get_position_fields(0, pointer);
     else
-        get_position_fields(1, $(this));
+        get_position_fields(1, pointer);
     eventHandler.stopImmediatePropagation();
 }
 
@@ -249,20 +255,16 @@ function order_list_events(data)
     $(".order-type")
         .on("change", select_fields_type);
 
-    position_to_insert = $("li.order-position:last");
+    pointer = $("li.order-position:last");
 
-    console.log("Length: " + position_to_insert.length);
+    console.log("Length: " + pointer.length);
 
-    position_to_insert.slideDown();
-
-    get_position_fields(0, position_to_insert);
+    pointer.slideDown();
+    set_order_confirm_button(1);
+    get_position_fields(0, pointer);
 }
 
-var book_enable;
-
 function add_position() {
-    if(!book_enable)
-        book_enable = 1;
     $.ajax({
         url: "/php/db/order.php",
         type: "POST",
@@ -278,7 +280,7 @@ function add_position() {
 }
 
 function remove_all() {
-    book_enable = 0;
+    set_order_confirm_button(0);
     $("ul#orders-list").empty();
 }
 
@@ -292,7 +294,9 @@ function start_ordering(data) {
         return;
     }
     $("#order-client-search").replaceWith(data['data']);
-    $("#btn-book-order").attr("display", "none");
+    console.log("Disabling order confirmation first time");
+    $("#btn-book-order").attr("style", "display: none;");
+
     $("#order-client-info").slideDown({
                 duration: 400,
                 easing: 'swing'
@@ -301,7 +305,19 @@ function start_ordering(data) {
                 duration: 400,
                 easing: 'swing'
             });
-
+    $("#receipt-client-name").text(
+        data['clientName'] + ' ' + data['clientSurname']
+    );
+    
+    $("#receipt-client-id").text(data['clientID']);
+    $("#receipt-client-sex").text(data['clientSex']);
+    $("#receipt-client-funds").text(data['clientFunds']);
+    $("#receipt-client-e-mail").text(data['clientEMail']);
+    $("#receipt-passport-serial").text(data['clientPassportSerial']);
+    $("#receipt-passport-number").text(data['clientPassportNumber']);
+    $("#receipt-client-phone-number").text(data['clientPhoneNumber']);
+    
+    
     //show_pop_up_success("Клиент найден. Доступно оформление заказа");
     $("#btn-add-position").click(add_position);
     $("#btn-remove-all").click(remove_all);

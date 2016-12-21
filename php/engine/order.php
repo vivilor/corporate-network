@@ -195,7 +195,7 @@ function pack_order_position_fields($content=array())
                     pack_text_field(
                         "item-quantity", "",
                         "order-item-quantity",
-                        "Кол-во") :
+                        "Кол-во", 0, "1") :
                     ""
                 ),
             "h-space"
@@ -284,9 +284,9 @@ function pack_order_positions_list()
         pack_form_row(
             pack_text("Список заказа", "", "h-space center") .
             pack_side_bar(array(
-                    "book-order",
+                    "remove-all",
                     "add-position",
-                    "remove-all"
+                    "book-order"
                 ),
                 "absolute order-list-btns"
             ),
@@ -312,6 +312,68 @@ function pack_receipt_view($content="")
             "class" => "receipt-view relative inline v-top",
         ),
         $content
+    );
+}
+
+
+function pack_receipt_content()
+{
+    return pack_in_paired_tag(
+        "div",
+        array(
+            "id" => "receipt-logo",
+            "class" => "logo rightfloat"
+        ),
+        ""
+    ) .
+    pack_in_paired_tag(
+        "div",
+        array(
+            "id" => "receipt-head",
+            "class" => "relative segoe-ui regular large"
+        ),
+        "Заказ"
+    ) .
+    pack_in_paired_tag(
+        "div",
+        array(
+            "id" => "receipt-client-info",
+            "class" => "relative small"
+        ),
+        pack_form_row(
+            pack_text("Физ. лицо:") .
+            pack_text("", "receipt-client-name", "regular h-space") .
+            pack_text("ID:") .
+            pack_text("", "receipt-client-id", "regular h-space") .
+            pack_text("Пол:", "h-space") .
+            pack_text("", "receipt-client-sex", "regular h-space")
+        ) .
+        pack_form_row(
+            pack_text("Паспорт:") .
+            pack_text("серия", "", "h-space").
+            pack_text("", "receipt-passport-serial", "regular") .
+            pack_text("номер", "", "h-space") .
+            pack_text("", "receipt-passport-number", "regular")
+        ) .
+        pack_form_row(
+            pack_text("Средств на счету:") .
+            pack_text("", "receipt-client-funds", "regular turned-on h-space") .
+            pack_text("руб.")
+        ) .
+        pack_form_row(
+            pack_text("Телефон:") .
+            pack_text("", "receipt-client-phone-number", "regular h-space") .
+            pack_text("E-mail:") .
+            pack_text("", "receipt-client-e-mail", "regular h-space")
+        )
+    ) .
+    pack_in_paired_tag(
+        "div",
+        array(
+            "id" => "receipt-list",
+            "class" => "receipt-list"
+        ),
+        ""
     );
 }
 

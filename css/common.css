@@ -31,6 +31,8 @@
 
 .light { background-color: #202020 }
 
+.no-outline { outline: none }
+
 #start {
     margin: 80px 41% 60px 41%;
 }

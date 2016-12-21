@@ -34,7 +34,7 @@ function pack_form_tip($tip_text, $class="")
 
 
 function pack_text_field($name, $placeholder, $class="", $label="",
-    $pswd=0)
+    $pswd=0, $value="")
 {
     return pack_in_paired_tag(
         "div",
@@ -54,6 +54,7 @@ function pack_text_field($name, $placeholder, $class="", $label="",
             array(
                 "id" => $name,
                 "name" => $name,
+                "value" => $value,
                 "type" => ($pswd ? "password" : "text"),
                 "class" => "input-text relative clear segoe-ui small " . $class,
                 "placeholder" => $placeholder,

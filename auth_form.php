@@ -33,8 +33,8 @@ $content = pack_form("auth.php", "post",
     pack_form_tip(
         "Используйте логин и пароль, выданные Вам администратором системы."
     ) .
-    pack_text_field("usr-name", "Логин") .
-    pack_text_field("usr-pswd", "Пароль", "", "", 1)  .
+    pack_text_field("usr-name", "Логин", "v-space") .
+    pack_text_field("usr-pswd", "Пароль", "v-space", "", 1)  .
     pack_form_btns(1),
     " hidden form"
 );

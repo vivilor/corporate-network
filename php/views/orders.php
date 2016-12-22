@@ -55,7 +55,7 @@ $receipt_view = pack_receipt_view(
 
 $content = pack_order_entities(
     $order_view . $receipt_view
-);
+) . pack_order_search_entities();
 
 /* End content */
 

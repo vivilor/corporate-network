@@ -80,8 +80,26 @@
 #btn-add-position-icon      { background-image: url('/img/buttons/add-position.png') }
 #btn-remove-all-icon        { background-image: url('/img/buttons/remove-all.png') }
 #btn-search-icon            { background-image: url('/img/buttons/search.png') }
+#btn-search-order-icon      { background-image: url('/img/buttons/search.png') }
 #btn-delete-position-icon   { background-image: url('/img/buttons/delete-position.png') }
-#btn-book-order-icon   { background-image: url('/img/buttons/success.png') }
+#btn-book-order-icon        { background-image: url('/img/buttons/success.png') }
+
+#btn-accept-order,
+#btn-decline-order {
+    margin: 0 0 0 50px;
+    outline: 1px solid #DFDFDF;
+    padding: 0 25px;
+    transition: .2s linear;
+    font-weight: 500;
+    cursor: pointer;
+}
+
+#btn-accept-order:hover,
+#btn-decline-order:hover {
+    background-color: #DFDFDF;
+    color: #008800;
+    outline: 1px solid #DFDFDF;
+}
 
 
 
@@ -255,7 +273,7 @@
 }
 
 .input-text {
-    background-color: #202020;
+    background-color: #131313;
     z-index: 23;
     height: 34px;
     width: 350px;
@@ -320,7 +338,7 @@
     height: 44px;
     width: 80px;
     outline: none;
-    background-color: #202020;
+    background-color: #131313;
     color: #DFDFDF;
 }
 
@@ -586,15 +604,19 @@
 }
 
 .receipt-position-index,
-.receipt-position-quantity {
+.receipt-position-quantity,
+#receipt-position-index,
+#receipt-position-quantity {
     width: 30px;
 }
 
-.receipt-position-type {
+.receipt-position-type,
+#receipt-position-type {
     width: 105px;
 }
 
-.receipt-position-name {
+.receipt-position-name,
+#receipt-position-name {
     width: 250px;
 }
 
@@ -603,13 +625,19 @@
     width: 100px;
 }
 
-.receipt-position-cost {}
+.receipt-position-cost,
+#receipt-position-cost {}
 
 .receipt-list {
     margin: 0;
     border: none;
     list-style: none;
     padding: 0;
+}
+
+#order-info {
+    left: 54px;
+    position: absolute;
 }
 
 

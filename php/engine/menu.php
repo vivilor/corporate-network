@@ -27,6 +27,7 @@ $buttons_list = array(
 	'add-position' => 'Добавить позицию',
 	'remove-all' => 'Удалить все позиции',
 	'book-order' => 'Оформить заказ',
+	'search-order' => 'Найти заказ',
 	'clients',
 	'equip',
 	'adjuster',

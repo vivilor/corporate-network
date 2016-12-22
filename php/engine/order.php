@@ -23,15 +23,15 @@ function pack_order_info($info)
         "div",
         array(
             "id" => "order-info",
-            "class" => "order-info"
+            "class" => "order-info relative low-z"
         ),
         pack_in_paired_tag(
             "div",
             array(
                 "id" => "order-id",
-                "class" => "order-id large bold segoe-ui"
+                "class" => "order-id large regular segoe-ui"
             ),
-            $info['orderID']
+            "ID: " . $info['orderID']
         ) .
         pack_in_paired_tag(
             "div",
@@ -63,9 +63,9 @@ function pack_order_info($info)
                 "class" => "text small segoe-ui"
             ),
             "Дата заказа: " .
-            $info['DAY'] . "." .
-            $info['MONTH'] . "." .
-            $info['YEAR']
+            $info['DAY(`orderDate`)'] . "." .
+            $info['MONTH(`orderDate`)'] . "." .
+            $info['YEAR(`orderDate`)']
         ) .
         (isset($info['technitianID']) ?
             pack_in_paired_tag(
@@ -255,7 +255,7 @@ function pack_order_entities($content)
         "div",
         array(
             "id" => "order-entities",
-            "class" => "order-entities relative inline v-top",
+            "class" => "order-entities relative inline v-top hidden",
         ),
         $content
     );
@@ -309,7 +309,7 @@ function pack_receipt_view($content="")
         "div",
         array(
             "id" => "receipt-view",
-            "class" => "receipt-view relative inline v-top",
+            "class" => "receipt-view relative inline v-top hidden",
         ),
         $content
     );
@@ -378,7 +378,7 @@ function pack_receipt_content()
 }
 
 
-function pack_receipt_position($index, $type, $name, $quantity, $cost)
+function pack_receipt_position($index="", $type="", $name="", $quantity="", $cost="")
 {
     return pack_in_paired_tag(
         "li",
@@ -393,7 +393,7 @@ function pack_receipt_position($index, $type, $name, $quantity, $cost)
             pack_text($name, "", "h-space regular receipt-position-name") .
             pack_text($quantity, "", "h-space receipt-position-quantity") .
             pack_text($cost, "", "h-space regular receipt-position-cost") .
-            pack_text("руб.", "", "receipt-position-cost"),
+            pack_text("руб.", "", ""),
             "small"
         )
     );
@@ -402,11 +402,11 @@ function pack_receipt_position($index, $type, $name, $quantity, $cost)
 function pack_receipt_positions_header()
 {
     return pack_form_row(
-        pack_text("№", "", "h-space regular receipt-position-index") .
-        pack_text("Тип", "", "h-space regular receipt-position-type") .
-        pack_text("Наименование", "", "h-space regular receipt-position-name") .
-        pack_text("N", "", "h-space regular receipt-position-quantity") .
-        pack_text("Цена", "", "h-space regular receipt-position-cost")
+        pack_text("№", "receipt-position-index", "h-space regular") .
+        pack_text("Тип", "receipt-position-type", "h-space regular ") .
+        pack_text("Наименование", "receipt-position-name", "h-space regular ") .
+        pack_text("N", "receipt-position-quantity", "h-space regular ") .
+        pack_text("Цена", "receipt-position-cost", "h-space regular ")
     , "t-margin") .
     pack_in_paired_tag(
         "ul",
@@ -433,4 +433,38 @@ function pack_receipt_positions_header()
         "Итого в рублях (RUR):"
     );
 }
+
+
+function pack_order_search_entities()
+{
+    return pack_in_paired_tag(
+        "div",
+        array(
+            "id" => "order-search-entities",
+            "class" => "order-search-entities relative hidden"
+        ),
+        pack_in_paired_tag(
+            "div",
+            array(
+                "id" => "order-search-input",
+                "class" => "order-search-input"
+            ),
+            pack_form_row(
+                pack_text_field("order-id-input", "Введите ID заказа") .
+                pack_side_bar(
+                    array("search-order"), "v-top"
+                )
+            )
+        ) .
+        pack_in_paired_tag(
+            "div",
+            array(
+                "id" => "order-search-output",
+                "class" => "order-search-output relative hidden"
+            ),
+            ""
+        )
+    );
+}
 ?>
+

@@ -9,6 +9,15 @@ require_once "../engine/table.php";
 require_once "safe_query.php";
 require_once "db.php";
 
+function print_array($array)
+{
+    foreach(array_keys($array) as $key):
+        print_r($key . " : ");
+        print_r($array[$key]);
+        echo '<br>';
+    endforeach;
+    echo '<br><br><br>';
+}
 
 function append_to($src, &$dest)
 {
@@ -18,17 +27,13 @@ function append_to($src, &$dest)
     endforeach;
 }
 
-
 function positions_shift(&$array, $index)
 {
     $array_len = count($array);
     for($i = $index; $i < ($array_len - 1); $i++)
-    {
         $array[$i] = $array[$i + 1];
-    }
     unset($array[$array_len - 1]);
 }
-
 
 function get_order_info($pdo, $id)
 {
@@ -46,7 +51,7 @@ function get_order_info($pdo, $id)
                `orderTechnitianID`,
                DAY(`orderDate`),
                MONTH(`orderDate`),
-               YEAR(`orderDate`),
+               YEAR(`orderDate`)
         FROM `cloudware`.`order`
         WHERE `orderID` = " . $id . ";";
     
@@ -59,7 +64,6 @@ function get_order_info($pdo, $id)
     append_to($data, $order_info);
 
     /* Client info */
-
     $query_text = "
         SELECT `clientName`,
                `clientSurname`
@@ -90,10 +94,9 @@ function get_order_info($pdo, $id)
         $order_info['itemDesc'] = $data['equipDesc'];
 
         $query_text = "
-            SELECT `technitian`.`technitianName`,
-                   FROM `cloudware`.`technitian`;
-
-            WHERE `equipID` = " . $order_info['orderTechnitianID'] . ";";
+            SELECT `technitian`.`technitianName`
+                   FROM `cloudware`.`technitian`
+            WHERE `technitianID` = " . $order_info['orderTechnitianID'] . ";";
             
         $result = execute_query($pdo, $query_text);
         if(isset($result['PDOException']))
@@ -106,7 +109,7 @@ function get_order_info($pdo, $id)
     else
     {
         $query_text = "
-            SELECT `service`.`serviceTitle`,
+            SELECT `service`.`serviceTitle`
             FROM `cloudware`.`service`
             WHERE `serviceID` = " . $order_info['orderItemID'] . ";";
 
@@ -121,7 +124,6 @@ function get_order_info($pdo, $id)
 
     return $order_info;
 }
-
 
 function store_prices($pdo)
 {
@@ -160,22 +162,67 @@ function store_prices($pdo)
     return array("success" => "true");
 }
 
-
-function append_position($type=0, $name='LIMIT C', $quantity="1", $technitian="")
+function get_item_cost($type, $name)
 {
-    $_SESSION['order_positions'][count($_SESSION['order_positions'])] =
-        array($type, $name, $quantity, $technitian);
+    return (int) $_SESSION['prices_storage'][$type][$name];
 }
 
-function change_position_cost($index, $new_quantity)
+function get_position_cost($index)
 {
     $type = $_SESSION['order_positions'][$index][0];
     $name = $_SESSION['order_positions'][$index][1];
-    $quantity = $new_quantity - $_SESSION['order_positions'][$index][2];
-    $_SESSION['order_positions'][$index][2] += $quantity;
-    $_SESSION['order_cost'] =
-        $_SESSION['order_cost'] + $quantity *
-            $_SESSION['prices_storage'][$type][$name];
+    $quantity = $_SESSION['order_positions'][$index][2];
+    $cost = get_item_cost($type, $name);
+    return $quantity * $cost;
+}
+
+function get_position_quantity($index)
+    { return $_SESSION['order_positions'][$index][2]; }
+
+function get_position_name($index)
+    { return $_SESSION['order_positions'][$index][1]; }
+    
+function get_position_type($index)
+    { return $_SESSION['order_positions'][$index][0]; }
+
+function set_position_type($index, $type)
+    { $_SESSION['order_positions'][$index][0] = $type; }
+
+function set_position_name($index, $name)
+    { $_SESSION['order_positions'][$index][1] = $name; }
+
+function set_position_quantity($index, $quantity)
+    { $_SESSION['order_positions'][$index][2] = $quantity; }
+    
+function set_position_technitian($index, $technitian)
+    { $_SESSION['order_positions'][$index][3] = $technitian; }
+
+function set_position_cost($index, $new_quantity)
+{
+    $name = get_position_name($index);
+    $type = get_position_type($index);
+    $quantity =
+            (int) $new_quantity - (int) $_SESSION['order_positions'][$index][2];
+    $_SESSION['order_cost'] += ( (int) $quantity * get_item_cost($type, $name));
+
+}
+
+function update_order_cost()
+{
+    $_SESSION['order_cost'] = 0;
+    foreach ($_SESSION['order_positions'] as $position):
+        $_SESSION['order_cost'] += (
+            get_item_cost($position[0], $position[1]) * 
+            $position[2]
+        );
+    endforeach;
+    return $_SESSION['order_cost'];
+}
+
+function append_position()
+{
+    $_SESSION['order_positions'][count($_SESSION['order_positions'])] =
+        array();
 }
 
 function get_order_form_options($pdo, $type)
@@ -217,7 +264,6 @@ function get_order_form_options($pdo, $type)
     );
 }
 
-
 function set_client_for_order($pdo, $passport_serial, $passport_number)
 {
     $query_text = "
@@ -237,7 +283,8 @@ function set_client_for_order($pdo, $passport_serial, $passport_number)
         return array('PDOException' => $result['PDOException']);
 
     $data = $result['PDOStatement']->fetch();
-
+    if(!$result['PDOStatement']->rowCount())
+        return array('EmptyResponce' => 'Not Found');
     $client_info = array();
     append_to($data, $client_info);
     return $client_info;
@@ -245,8 +292,7 @@ function set_client_for_order($pdo, $passport_serial, $passport_number)
 
 
 
-if( isset($_POST['passport_serial']) &&
-    isset($_POST['passport_number']) )
+if( isset($_POST['passport_serial']) && isset($_POST['passport_number']) )
 {
     $passport_serial = $_POST['passport_serial'];
     $passport_number = $_POST['passport_number'];
@@ -254,6 +300,20 @@ if( isset($_POST['passport_serial']) &&
     $client_info = set_client_for_order(
         $pdo, $passport_serial, $passport_number
     );
+    if( isset($client_info['PDOException']) )
+    {
+        echo json_encode(array(
+            "PDOException" => $client_info['PDOException']
+        ));
+        exit();
+    }
+    if( isset($client_info['EmptyResponce']) )
+    {
+        echo json_encode(array(
+            "error" => "true"
+        ));
+        exit();
+    }
     if( !isset($_SESSION['prices_storage']) )
         store_prices($pdo);
     $_SESSION['current_order_client_id'] = $client_info['clientID'];
@@ -279,6 +339,8 @@ if( isset($_POST['passport_serial']) &&
     exit();
 }
 
+
+
 elseif( isset($_POST['remember_order_client']) )
 {
     $passport_serial = $_SESSION['current_order_passport_serial'];
@@ -287,6 +349,20 @@ elseif( isset($_POST['remember_order_client']) )
     $client_info = set_client_for_order(
         $pdo, $passport_serial, $passport_number
     );
+    if( isset($client_info['PDOException']) )
+    {
+        echo json_encode(array(
+            "PDOException" => $client_info['PDOException']
+        ));
+        exit();
+    }
+    if( isset($client_info['EmptyResponce']) )
+    {
+        echo json_encode(array(
+            "error" => "true"
+        ));
+        exit();
+    }
     $_SESSION['order_cost'] = 0;
     $_SESSION['order_positions'] = array();
     if( !isset($_SESSION['prices_storage']) )
@@ -309,39 +385,47 @@ elseif( isset($_POST['remember_order_client']) )
     exit();
 }
 
-elseif( isset($_POST['remove_all']) )
+
+
+elseif( isset($_POST['remove_all_positions']) )
 {
     $_SESSION['order_positions'] = array();
     $_SESSION['order_cost'] = 0;
     echo "";
     exit();
 }
+
+
+
 elseif( isset($_POST['changed_index']) )
 {
     $index = $_POST['changed_index'];
     if( isset($_POST['changed_type']) )
     {
-        $_SESSION['order_positions'][$index][3] = "";
-        $_SESSION['order_positions'][$index][2] = "";
-        $_SESSION['order_positions'][$index][1] = "";
-        $_SESSION['order_positions'][$index][0]
-            = $_POST['changed_type'];
-        change_position_cost($index, 0);
+        $type = $_POST['changed_type'];
+        set_position_type($index, $type);
     }
-    elseif( isset($_POST['changed_quantity']) )
+
+    if( isset($_POST['changed_quantity']) )
     {
-        change_position_cost($index, $_POST['changed_quantity']);
+        $quantity = $_POST['changed_quantity'];
+        set_position_quantity($index, $quantity);
+        set_position_cost($index, $quantity);
     }
-    elseif( isset($_POST['changed_technitian']) )
+
+    if( isset($_POST['changed_technitian']) )
     {
-        $_SESSION['order_positions'][$index][3] = $_POST['changed_technitian'];
+        $technitian = $_POST['changed_technitian'];
+        set_position_technitian($index, $technitian);
     }
-    elseif( isset($_POST['changed_name']) )
+
+    if( isset($_POST['changed_name']) )
     {
-        change_position_cost($index, 0);
-        $_SESSION['order_positions'][$index][1] = $_POST['changed_name'];
-        change_position_cost($index, 1);
+        $name = $_POST['changed_name'];
+        set_position_name($index, $name);
+        //echo $name;
     }
+    /*
     else
     {
         echo json_encode(array(
@@ -349,90 +433,58 @@ elseif( isset($_POST['changed_index']) )
         ));
         exit();
     }
+    */
+    update_order_cost();
     echo json_encode(array(
-            "selected_item_price" =>
-            $_SESSION['prices_storage']
-                [$_SESSION['order_positions'][$index][0]]
-                    [$_SESSION['order_positions'][$index][1]],
+            "item_cost" => get_position_cost($index),
             "order_cost" => $_SESSION['order_cost']
     ));
     exit();
-
 }
+
+
+
 elseif( isset($_POST['store_prices']) )
 {
     $pdo = establish_connection_for_role();
     store_prices($pdo);
 }
 
-/*
-    Append new position to $_SESSION['order_positions']
-    << 'selected_name', 'selected_type'
-    >> 'selected_item_price'
-*/
 
-elseif( isset($_POST['added_name']) &&
-        isset($_POST['added_type']) )
-{
-    if( isset($_POST['added_quantity']) &&
-        isset($_POST['added_technitian']) )
-    {
-        append_position(
-            $_POST['added_name'],
-            $_POST['added_type'],
-            $_POST['added_quantity'],
-            ($_POST['added_technitian'] == '-1' ?
-                "1" :
-                $_POST['added_technitian'])
-        );
-        echo json_encode(array(
-            "added_item_price" =>
-            $_SESSION['prices_storage']
-                [$_POST['added_type']]
-                    [$_POST['added_name']]
-        ));
-        exit();
-    }
-    else
-    {
-        append_position(
-            $_POST['added_name'],
-            $_POST['added_type']);
-        echo json_encode(array(
-            "added_item_price" =>
-            $_SESSION['prices_storage']
-                [$_POST['added_type']]
-                    [$_POST['added_name']]
-        ));
-        exit();
-    }
-}
 
 elseif( isset($_POST['removed_index']) )
 {
-    change_position_cost($_POST['removed_index'], 0);
-    positions_shift($_SESSION['order_positions'], $_POST['removed_index']);
+    positions_shift($_SESSION['order_positions'], (int) $_POST['removed_index']);
+    update_order_cost();
     echo json_encode(array(
+            /*"order_cost" => $str . " and after " . count($_SESSION['order_positions'])*/
             "order_cost" => $_SESSION['order_cost']
     ));
     exit();
 }
 
-elseif( isset($_POST['add_position']) )
+
+
+elseif( isset($_POST['add_order_position']) )
 {
     append_position();
-    $_SESSION['order_cost'] += $_SESSION['prices_storage']['0']['LIMIT C'];
     echo json_encode(array(
-        "order_data" => pack_order_position(),
-        "receipt_data" => pack_receipt_position(
-            count($_SESSION['order_positions']),
-            0, 'LIMIT C', 1,
-            $_SESSION['prices_storage']['0']['LIMIT C']
-        ),
-        "order_cost" => $_SESSION['order_cost']
+        "order_data" => pack_order_position()
     ));
     exit();
 }
+
+
+
+elseif( isset($_POST['add_receipt_position']) )
+{
+    echo json_encode(array(
+        "receipt_data" => pack_receipt_position()
+    ));
+    exit();
+}
+
+
 
 elseif( isset($_POST['check']) )
 {
@@ -448,6 +500,8 @@ elseif( isset($_POST['check']) )
     }
 }
 
+
+
 elseif( isset($_POST['retrieve_client_search_form']) )
 {
     echo json_encode(array(
@@ -455,6 +509,8 @@ elseif( isset($_POST['retrieve_client_search_form']) )
     ));
     exit();
 }
+
+
 
 elseif( isset($_POST['form_type']) )
 {
@@ -467,6 +523,20 @@ elseif( isset($_POST['form_type']) )
     ));
     exit();
 }
+
+
+
+elseif( isset($_POST['get_order_by_that_id']) ) {
+    $id = $_POST['get_order_by_that_id'];
+    $pdo = establish_connection_for_role();/*
+    echo pack_order_info(get_order_info($pdo, $id));*/
+    echo json_encode(array(
+        "data" => pack_order_info(get_order_info($pdo, $id))
+    ));
+    exit();
+}
+
+
 
 else
 {

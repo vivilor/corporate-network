@@ -13,10 +13,12 @@
 
 .hidden     { display: none }
 
+.low-z      { z-index: 10 }
+
 .v-center   { vertical-align: middle }
 .v-top      { vertical-align: top }
 .v-bottom   { vertical-align: bottom }
-.laft-space { margin-left: 10px }
+.left-space { margin-left: 10px }
 .right-space { margin-right: 10px }
 .t-margin   { margin-top: 30px; }
 .b-margin   { margin-bottom: 30px; }

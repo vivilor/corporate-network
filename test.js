@@ -10,5 +10,6 @@ $(document).ready(function(){
                 current_obj.val() +
             '</div>');
         });
+        console.log($("li:last").index());
     });
 });
